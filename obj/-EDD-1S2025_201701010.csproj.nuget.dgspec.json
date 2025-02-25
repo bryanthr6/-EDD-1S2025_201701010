@@ -1,0 +1,61 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/-EDD-1S2025_201701010.csproj": {}
+  },
+  "projects": {
+    "/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/-EDD-1S2025_201701010.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/-EDD-1S2025_201701010.csproj",
+        "projectName": "-EDD-1S2025_201701010",
+        "projectPath": "/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/-EDD-1S2025_201701010.csproj",
+        "packagesPath": "/home/bryant/.nuget/packages/",
+        "outputPath": "/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/bryant/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/6.0.428/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

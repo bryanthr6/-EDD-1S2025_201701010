@@ -1,0 +1,15 @@
+/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/bin/Debug/net6.0/-EDD-1S2025_201701010
+/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/bin/Debug/net6.0/-EDD-1S2025_201701010.deps.json
+/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/bin/Debug/net6.0/-EDD-1S2025_201701010.runtimeconfig.json
+/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/bin/Debug/net6.0/-EDD-1S2025_201701010.dll
+/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/bin/Debug/net6.0/-EDD-1S2025_201701010.pdb
+/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/obj/Debug/net6.0/-EDD-1S2025_201701010.csproj.AssemblyReference.cache
+/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/obj/Debug/net6.0/-EDD-1S2025_201701010.GeneratedMSBuildEditorConfig.editorconfig
+/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/obj/Debug/net6.0/-EDD-1S2025_201701010.AssemblyInfoInputs.cache
+/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/obj/Debug/net6.0/-EDD-1S2025_201701010.AssemblyInfo.cs
+/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/obj/Debug/net6.0/-EDD-1S2025_201701010.csproj.CoreCompileInputs.cache
+/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/obj/Debug/net6.0/-EDD-1S2025_201701010.dll
+/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/obj/Debug/net6.0/refint/-EDD-1S2025_201701010.dll
+/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/obj/Debug/net6.0/-EDD-1S2025_201701010.pdb
+/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/obj/Debug/net6.0/-EDD-1S2025_201701010.genruntimeconfig.cache
+/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/obj/Debug/net6.0/ref/-EDD-1S2025_201701010.dll
