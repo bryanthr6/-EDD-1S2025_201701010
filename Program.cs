@@ -88,6 +88,11 @@ unsafe class Program {
             string opcion = Console.ReadLine();
 
             switch (opcion) {
+                case "1":
+                    Console.Write("Ingrese el ID del usuario: ");
+                    int id = int.Parse(Console.ReadLine());
+                    usuarios.VerUsuario(id, vehiculos);
+                    break;
                 case "4":
                     return;
                 default:
@@ -96,6 +101,7 @@ unsafe class Program {
             }
         }
     }
+
 
     static void IngresarUsuario() {
         Console.Write("ID: ");

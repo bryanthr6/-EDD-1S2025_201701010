@@ -35,4 +35,43 @@ unsafe class ListaUsuarios {
         }
         return null;
     }
+
+    // FUNCION PARA VER USUARIO
+    public void VerUsuario(int id, ListaVehiculos vehiculos) {
+        NodoUsuario* usuario = BuscarPorID(id);
+        if (usuario == null) {
+            Console.WriteLine("Usuario no encontrado.");
+            return;
+        }
+
+        Console.WriteLine("\n--- Información del Usuario ---");
+        Console.WriteLine($"ID: {usuario->ID}");
+        Console.WriteLine($"Nombres: {GetString(usuario->Nombres)}");
+        Console.WriteLine($"Apellidos: {GetString(usuario->Apellidos)}");
+        Console.WriteLine($"Correo: {GetString(usuario->Correo)}");
+
+        Console.WriteLine("\n--- Vehículos del Usuario ---");
+        NodoVehiculo* vehiculo = vehiculos.cabeza;
+        bool tieneVehiculos = false;
+
+        while (vehiculo != null) {
+            if (vehiculo->ID_Usuario == usuario->ID) {
+                Console.WriteLine($"ID Vehículo: {vehiculo->ID_Vehiculo}");
+                Console.WriteLine($"Marca: {GetString(vehiculo->Marca)}");
+                Console.WriteLine($"Modelo: {GetString(vehiculo->Modelo)}");
+                Console.WriteLine($"Placa: {GetString(vehiculo->Placa)}");
+                Console.WriteLine("----------------------------");
+                tieneVehiculos = true;
+            }
+            vehiculo = vehiculo->siguiente;
+        }
+
+        if (!tieneVehiculos) {
+            Console.WriteLine("Este usuario no tiene vehículos registrados.");
+        }
+    }
+
+    private string GetString(char* charArray) {
+        return new string(charArray).TrimEnd('\0');
+    }
 }
