@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "e+zbmOGHdAvIjzk15scOhmSZNENZRDbNLqok09MrnKjYZB4gMyp0c//7uEMFvkDLJ2BOWYAEOh3i8ou/YTtAqQ==",
+  "dgSpecHash": "rZhjJxmKAbTvkwD8CfpEdqopU+OTp0FJKWGNoJ6wHWrcvyT8lymvI2snNB2lAVD+PMaW5FpxEfFPNLaslbm/4A==",
   "success": true,
   "projectFilePath": "/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/-EDD-1S2025_201701010.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/home/bryant/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
   "logs": []
 }

@@ -13,3 +13,5 @@
 /home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/obj/Debug/net6.0/-EDD-1S2025_201701010.pdb
 /home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/obj/Debug/net6.0/-EDD-1S2025_201701010.genruntimeconfig.cache
 /home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/obj/Debug/net6.0/ref/-EDD-1S2025_201701010.dll
+/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/bin/Debug/net6.0/Newtonsoft.Json.dll
+/home/bryant/Documentos/EDD Proyecto/-EDD-1S2025_201701010/obj/Debug/net6.0/-EDD-1S2025_201701010.csproj.CopyComplete
