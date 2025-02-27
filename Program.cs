@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 
 unsafe class Program {
     static ListaUsuarios usuarios = new ListaUsuarios();
@@ -42,7 +44,8 @@ unsafe class Program {
             Console.WriteLine("2. Ingreso Manual");
             Console.WriteLine("3. Gestión de Usuarios");
             Console.WriteLine("4. Generar Servicio");
-            Console.WriteLine("5. Cerrar Sesión");
+            Console.WriteLine("5. Generar Reportes");
+            Console.WriteLine("6. Cerrar Sesión");
             Console.Write("Seleccione una opción: ");
             string? opcion = Console.ReadLine();
             if (opcion == null) continue;
@@ -58,6 +61,9 @@ unsafe class Program {
                     GenerarServicio();
                     break;
                 case "5":
+                    MostrarSubmenuReportes();
+                    break;
+                case "6":
                     Console.WriteLine("Cerrando sesión...");
                     usuarios.LiberarMemoria();
                     vehiculos.LiberarMemoria();
@@ -252,6 +258,28 @@ unsafe class Program {
         float total = costoServicio + repuesto->Precio;
         facturas.GenerarFactura(idServicio, idServicio, total);
         Console.WriteLine($"Factura generada: ID {idServicio}, Total: {total}");
+    }
+
+    static void MostrarSubmenuReportes() {
+        while (true) {
+            Console.WriteLine("\n--- Generar Reportes ---");
+            Console.WriteLine("1. Usuarios");
+            Console.WriteLine("2. Regresar");
+            Console.Write("Seleccione una opción: ");
+            string? opcion = Console.ReadLine();
+            if (opcion == null) continue;
+
+            switch (opcion) {
+                case "1":
+                    usuarios.GenerarReporteUsuarios();
+                    break;
+                case "2":
+                    return;
+                default:
+                    Console.WriteLine("Opción no válida.");
+                    break;
+            }
+        }
     }
 
     private static string GetString(char* charArray) {

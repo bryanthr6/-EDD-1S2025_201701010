@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 unsafe class ListaUsuarios {
     public NodoUsuario* cabeza;
@@ -9,6 +10,7 @@ unsafe class ListaUsuarios {
             Console.WriteLine("ID de usuario ya registrado.");
             return;
         }
+        
         NodoUsuario* nuevo = (NodoUsuario*)Marshal.AllocHGlobal(sizeof(NodoUsuario));
         nuevo->ID = id;
         
@@ -17,8 +19,17 @@ unsafe class ListaUsuarios {
         CopyString(nuevo->Correo, correo);
         CopyString(nuevo->Contrasenia, contrasenia);
 
-        nuevo->siguiente = cabeza;
-        cabeza = nuevo;
+        nuevo->siguiente = null;
+
+        if (cabeza == null) {
+            cabeza = nuevo;
+        } else {
+            NodoUsuario* actual = cabeza;
+            while (actual->siguiente != null) {
+                actual = actual->siguiente;
+            }
+            actual->siguiente = nuevo;
+        }
     }
 
     private void CopyString(char* destination, string source) {
@@ -102,6 +113,38 @@ unsafe class ListaUsuarios {
         }
         Console.WriteLine("Usuario no encontrado.");
     }
+
+    public void GenerarReporteUsuarios() {
+        string dotPath = "usuarios.dot";
+        string imagePath = "usuarios.png";
+        using (StreamWriter writer = new StreamWriter(dotPath)) {
+            writer.WriteLine("digraph G {");
+            writer.WriteLine("    rankdir=LR;");
+            writer.WriteLine("  node [shape=box, style=filled, color=lightblue];");
+            
+            NodoUsuario* actual = cabeza;
+            while (actual != null) {
+                if (actual->ID != 0) { // Excluir el usuario root
+                    string userLabel = $"\"{actual->ID}\" [label=\"ID: {actual->ID}\\nNombre: {GetString(actual->Nombres)} {GetString(actual->Apellidos)}\\nCorreo: {GetString(actual->Correo)}\"]";
+                    writer.WriteLine(userLabel);
+
+                    if (actual->siguiente != null && actual->siguiente->ID != 0) {
+                        writer.WriteLine($"\"{actual->ID}\" -> \"{actual->siguiente->ID}\";");
+                    }
+                }
+                actual = actual->siguiente;
+            }
+
+            writer.WriteLine("}");
+        }
+        
+        Process.Start("dot", $"-Tpng {dotPath} -o {imagePath}");
+        Console.WriteLine("Reporte generado: " + imagePath);
+    }
+
+
+
+
 
     public void LiberarMemoria() {
         NodoUsuario* actual = cabeza;
