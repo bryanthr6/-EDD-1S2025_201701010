@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 
 unsafe class ListaVehiculos {
     public NodoVehiculo* cabeza;
+    public NodoVehiculo* cola;
 
     public void Insertar(int idVehiculo, int idUsuario, string marca, string modelo, string placa, ListaUsuarios usuarios) {
         if (BuscarPorID(idVehiculo) != null) {
@@ -22,6 +23,13 @@ unsafe class ListaVehiculos {
         CopyString(nuevo->Placa, placa);
 
         nuevo->siguiente = cabeza;
+        nuevo->anterior = null;
+        
+        if (cabeza != null) {
+            cabeza->anterior = nuevo;
+        } else {
+            cola = nuevo; // Si la lista estaba vacía, también es la cola
+        }
         cabeza = nuevo;
     }
 
@@ -44,20 +52,24 @@ unsafe class ListaVehiculos {
 
     public void EliminarVehiculo(int id) {
         NodoVehiculo* actual = cabeza;
-        NodoVehiculo* anterior = null;
-
         while (actual != null) {
             if (actual->ID_Vehiculo == id) {
-                if (anterior == null) {
-                    cabeza = actual->siguiente;
+                if (actual->anterior != null) {
+                    actual->anterior->siguiente = actual->siguiente;
                 } else {
-                    anterior->siguiente = actual->siguiente;
+                    cabeza = actual->siguiente;
                 }
+
+                if (actual->siguiente != null) {
+                    actual->siguiente->anterior = actual->anterior;
+                } else {
+                    cola = actual->anterior;
+                }
+                
                 Marshal.FreeHGlobal((IntPtr)actual);
                 Console.WriteLine($"Vehículo con ID {id} eliminado.");
                 return;
             }
-            anterior = actual;
             actual = actual->siguiente;
         }
         Console.WriteLine("Vehículo no encontrado.");
@@ -71,5 +83,6 @@ unsafe class ListaVehiculos {
             Marshal.FreeHGlobal((IntPtr)temp);
         }
         cabeza = null;
+        cola = null;
     }
 }

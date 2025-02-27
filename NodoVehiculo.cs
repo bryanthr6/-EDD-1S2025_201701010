@@ -8,4 +8,5 @@ unsafe struct NodoVehiculo {
     public fixed char Modelo[50];
     public fixed char Placa[20];
     public NodoVehiculo* siguiente;
+    public NodoVehiculo* anterior; // Puntero para lista doblemente enlazada
 }
