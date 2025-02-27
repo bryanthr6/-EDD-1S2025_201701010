@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 unsafe class ListaRepuestos {
     public NodoRepuesto* cabeza = null;
 
-    public void Insertar(int id, string nombre, int cantidad, float precio) {
+    public void Insertar(int id, string nombre, float precio) {
         if (BuscarPorID(id) != null) {
             Console.WriteLine("ID de repuesto ya registrado.");
             return;
@@ -12,7 +12,6 @@ unsafe class ListaRepuestos {
 
         NodoRepuesto* nuevo = (NodoRepuesto*)Marshal.AllocHGlobal(sizeof(NodoRepuesto));
         nuevo->ID = id;
-        nuevo->Cantidad = cantidad;
         nuevo->Precio = precio;
         CopyString(nuevo->Nombre, nombre);
 
@@ -57,7 +56,7 @@ unsafe class ListaRepuestos {
 
         NodoRepuesto* actual = cabeza;
         do {
-            Console.WriteLine($"ID: {actual->ID}, Nombre: {GetString(actual->Nombre)}, Cantidad: {actual->Cantidad}, Precio: {actual->Precio}");
+            Console.WriteLine($"ID: {actual->ID}, Nombre: {GetString(actual->Nombre)}, Precio: {actual->Precio}");
             actual = actual->siguiente;
         } while (actual != cabeza);
     }

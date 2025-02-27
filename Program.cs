@@ -209,12 +209,10 @@ unsafe class Program {
         Console.Write("Nombre del Repuesto: ");
         string? nombre = Console.ReadLine();
         if (string.IsNullOrEmpty(nombre)) return;
-        Console.Write("Cantidad: ");
-        if (!int.TryParse(Console.ReadLine(), out int cantidad)) return;
         Console.Write("Precio: ");
         if (!float.TryParse(Console.ReadLine(), out float precio)) return;
 
-        repuestos.Insertar(id, nombre, cantidad, precio);
+        repuestos.Insertar(id, nombre, precio);
     }
 
     static void GenerarServicio() {
