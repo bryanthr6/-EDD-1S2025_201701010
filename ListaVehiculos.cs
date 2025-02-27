@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 unsafe class ListaVehiculos {
     public NodoVehiculo* cabeza;
@@ -22,15 +23,15 @@ unsafe class ListaVehiculos {
         CopyString(nuevo->Modelo, modelo);
         CopyString(nuevo->Placa, placa);
 
-        nuevo->siguiente = cabeza;
-        nuevo->anterior = null;
-        
-        if (cabeza != null) {
-            cabeza->anterior = nuevo;
+        nuevo->siguiente = null;
+        nuevo->anterior = cola;
+
+        if (cola != null) {
+            cola->siguiente = nuevo;
         } else {
-            cola = nuevo; // Si la lista estaba vacía, también es la cola
+            cabeza = nuevo; // Si la lista estaba vacía, también es la cabeza
         }
-        cabeza = nuevo;
+        cola = nuevo;
     }
 
     private void CopyString(char* destination, string source) {
@@ -75,6 +76,72 @@ unsafe class ListaVehiculos {
         Console.WriteLine("Vehículo no encontrado.");
     }
 
+    public void GenerarReporteVehiculos()
+    {
+        string rutaDot = "reporte_vehiculos.dot";
+        string rutaImagen = "reporte_vehiculos.png";
+
+        using (StreamWriter writer = new StreamWriter(rutaDot))
+        {
+            writer.WriteLine("digraph G {");
+            writer.WriteLine("    rankdir=LR;");
+            writer.WriteLine("    node [shape=box, style=filled, color=lightblue];");
+
+            NodoVehiculo* actual = cabeza;
+            int contador = 0;
+
+            while (actual != null)
+            {
+                string nodoActual = $"vehiculo{contador}";
+                writer.WriteLine($"    {nodoActual} [label=\"ID Vehículo: {actual->ID_Vehiculo}\\nID Usuario: {actual->ID_Usuario}\\nPlaca: {GetString(actual->Placa, 20)}\\nMarca: {GetString(actual->Marca, 50)}\\nModelo: {GetString(actual->Modelo, 50)}\"];");
+
+                if (actual->siguiente != null)
+                {
+                    string nodoSiguiente = $"vehiculo{contador + 1}";
+                    writer.WriteLine($"    {nodoActual} -> {nodoSiguiente} [dir=forward];");
+                    writer.WriteLine($"    {nodoActual} -> {nodoSiguiente} [dir=back];");
+                }
+
+                actual = actual->siguiente;
+                contador++;
+            }
+
+            writer.WriteLine("}");
+        }
+
+
+        // Generar imagen con Graphviz
+        try
+        {
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = "dot",
+                Arguments = $"-Tpng {rutaDot} -o {rutaImagen}",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using (Process process = new Process { StartInfo = psi })
+            {
+                process.Start();
+                process.WaitForExit();
+            }
+
+            Console.WriteLine("Reporte generado correctamente: " + rutaImagen);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error al generar el reporte: " + ex.Message);
+        }
+    }
+    private string GetString(char* charArray, int length)
+    {
+        return new string(charArray, 0, length).Split('\0')[0]; // Elimina caracteres nulos
+    }
+
+
+
     public void LiberarMemoria() {
         NodoVehiculo* actual = cabeza;
         while (actual != null) {
@@ -85,4 +152,6 @@ unsafe class ListaVehiculos {
         cabeza = null;
         cola = null;
     }
+    
 }
+

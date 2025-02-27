@@ -264,7 +264,8 @@ unsafe class Program {
         while (true) {
             Console.WriteLine("\n--- Generar Reportes ---");
             Console.WriteLine("1. Usuarios");
-            Console.WriteLine("2. Regresar");
+            Console.WriteLine("2. Vehículos");
+            Console.WriteLine("3. Regresar");
             Console.Write("Seleccione una opción: ");
             string? opcion = Console.ReadLine();
             if (opcion == null) continue;
@@ -274,6 +275,9 @@ unsafe class Program {
                     usuarios.GenerarReporteUsuarios();
                     break;
                 case "2":
+                    vehiculos.GenerarReporteVehiculos();
+                    break;
+                case "3":
                     return;
                 default:
                     Console.WriteLine("Opción no válida.");
