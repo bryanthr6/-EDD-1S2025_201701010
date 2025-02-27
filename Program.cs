@@ -3,8 +3,11 @@
 unsafe class Program {
     static ListaUsuarios usuarios = new ListaUsuarios();
     static ListaVehiculos vehiculos = new ListaVehiculos();
+    static ListaRepuestos repuestos = new ListaRepuestos();
+
 
     static void Main() {
+        // Insertar usuario root
         usuarios.Insertar(0, "root", "", "root@gmail.com", "root123");
 
         while (true) {
@@ -18,12 +21,17 @@ unsafe class Program {
 
     static bool Login() {
         Console.Write("Correo: ");
-        string correo = Console.ReadLine();
-        Console.Write("Contraseña: ");
-        string contrasenia = Console.ReadLine();
+        string? correo = Console.ReadLine();
+        if (string.IsNullOrEmpty(correo)) return false;
 
-        NodoUsuario* usuario = usuarios.BuscarPorID(0);
-        return usuario != null;
+        Console.Write("Contraseña: ");
+        string? contrasenia = Console.ReadLine();
+        if (string.IsNullOrEmpty(contrasenia)) return false;
+
+        NodoUsuario* usuario = usuarios.BuscarPorCorreo(correo);
+        if (usuario == null) return false;
+
+        return GetString(usuario->Contrasenia) == contrasenia;
     }
 
     static void MostrarMenuRoot() {
@@ -35,7 +43,8 @@ unsafe class Program {
             Console.WriteLine("4. Generar Servicio");
             Console.WriteLine("5. Cerrar Sesión");
             Console.Write("Seleccione una opción: ");
-            string opcion = Console.ReadLine();
+            string? opcion = Console.ReadLine();
+            if (opcion == null) continue;
 
             switch (opcion) {
                 case "2":
@@ -46,6 +55,8 @@ unsafe class Program {
                     break;
                 case "5":
                     Console.WriteLine("Cerrando sesión...");
+                    usuarios.LiberarMemoria();
+                    vehiculos.LiberarMemoria();
                     return;
                 default:
                     Console.WriteLine("Opción no válida.");
@@ -61,7 +72,8 @@ unsafe class Program {
             Console.WriteLine("2. Vehículo");
             Console.WriteLine("5. Regresar");
             Console.Write("Seleccione una opción: ");
-            string opcion = Console.ReadLine();
+            string? opcion = Console.ReadLine();
+            if (opcion == null) continue;
 
             switch (opcion) {
                 case "1":
@@ -83,17 +95,24 @@ unsafe class Program {
         while (true) {
             Console.WriteLine("\n--- Gestión de Usuarios ---");
             Console.WriteLine("1. Ver Usuario");
-            Console.WriteLine("4. Regresar");
+            Console.WriteLine("2. Eliminar Usuario");
+            Console.WriteLine("3. Regresar");
             Console.Write("Seleccione una opción: ");
-            string opcion = Console.ReadLine();
+            string? opcion = Console.ReadLine();
+            if (opcion == null) continue;
 
             switch (opcion) {
                 case "1":
                     Console.Write("Ingrese el ID del usuario: ");
-                    int id = int.Parse(Console.ReadLine());
+                    if (!int.TryParse(Console.ReadLine(), out int id)) return;
                     usuarios.VerUsuario(id, vehiculos);
                     break;
-                case "4":
+                case "2":
+                    Console.Write("Ingrese el ID del usuario a eliminar: ");
+                    if (!int.TryParse(Console.ReadLine(), out int idEliminar)) return;
+                    usuarios.EliminarUsuario(idEliminar);
+                    break;
+                case "3":
                     return;
                 default:
                     Console.WriteLine("Opción no válida.");
@@ -102,32 +121,46 @@ unsafe class Program {
         }
     }
 
-
     static void IngresarUsuario() {
         Console.Write("ID: ");
-        int id = int.Parse(Console.ReadLine());
+        if (!int.TryParse(Console.ReadLine(), out int id)) return;
         Console.Write("Nombres: ");
-        string nombres = Console.ReadLine();
+        string? nombres = Console.ReadLine();
+        if (string.IsNullOrEmpty(nombres)) return;
         Console.Write("Apellidos: ");
-        string apellidos = Console.ReadLine();
+        string? apellidos = Console.ReadLine();
+        if (string.IsNullOrEmpty(apellidos)) return;
         Console.Write("Correo: ");
-        string correo = Console.ReadLine();
+        string? correo = Console.ReadLine();
+        if (string.IsNullOrEmpty(correo)) return;
         Console.Write("Contraseña: ");
-        string contrasenia = Console.ReadLine();
+        string? contrasenia = Console.ReadLine();
+        if (string.IsNullOrEmpty(contrasenia)) return;
+
         usuarios.Insertar(id, nombres, apellidos, correo, contrasenia);
     }
 
     static void IngresarVehiculo() {
         Console.Write("ID Vehículo: ");
-        int idVehiculo = int.Parse(Console.ReadLine());
+        if (!int.TryParse(Console.ReadLine(), out int idVehiculo)) return;
         Console.Write("ID Usuario: ");
-        int idUsuario = int.Parse(Console.ReadLine());
+        if (!int.TryParse(Console.ReadLine(), out int idUsuario)) return;
         Console.Write("Marca: ");
-        string marca = Console.ReadLine();
+        string? marca = Console.ReadLine();
+        if (string.IsNullOrEmpty(marca)) return;
         Console.Write("Modelo: ");
-        string modelo = Console.ReadLine();
+        string? modelo = Console.ReadLine();
+        if (string.IsNullOrEmpty(modelo)) return;
         Console.Write("Placa: ");
-        string placa = Console.ReadLine();
+        string? placa = Console.ReadLine();
+        if (string.IsNullOrEmpty(placa)) return;
+
         vehiculos.Insertar(idVehiculo, idUsuario, marca, modelo, placa, usuarios);
+    }
+
+    
+
+    private static string GetString(char* charArray) {
+        return new string(charArray).TrimEnd('\0');
     }
 }

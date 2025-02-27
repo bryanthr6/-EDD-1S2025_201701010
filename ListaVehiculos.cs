@@ -16,9 +16,11 @@ unsafe class ListaVehiculos {
         NodoVehiculo* nuevo = (NodoVehiculo*)Marshal.AllocHGlobal(sizeof(NodoVehiculo));
         nuevo->ID_Vehiculo = idVehiculo;
         nuevo->ID_Usuario = idUsuario;
+
         CopyString(nuevo->Marca, marca);
         CopyString(nuevo->Modelo, modelo);
         CopyString(nuevo->Placa, placa);
+
         nuevo->siguiente = cabeza;
         cabeza = nuevo;
     }
@@ -38,5 +40,36 @@ unsafe class ListaVehiculos {
             actual = actual->siguiente;
         }
         return null;
+    }
+
+    public void EliminarVehiculo(int id) {
+        NodoVehiculo* actual = cabeza;
+        NodoVehiculo* anterior = null;
+
+        while (actual != null) {
+            if (actual->ID_Vehiculo == id) {
+                if (anterior == null) {
+                    cabeza = actual->siguiente;
+                } else {
+                    anterior->siguiente = actual->siguiente;
+                }
+                Marshal.FreeHGlobal((IntPtr)actual);
+                Console.WriteLine($"Vehículo con ID {id} eliminado.");
+                return;
+            }
+            anterior = actual;
+            actual = actual->siguiente;
+        }
+        Console.WriteLine("Vehículo no encontrado.");
+    }
+
+    public void LiberarMemoria() {
+        NodoVehiculo* actual = cabeza;
+        while (actual != null) {
+            NodoVehiculo* temp = actual;
+            actual = actual->siguiente;
+            Marshal.FreeHGlobal((IntPtr)temp);
+        }
+        cabeza = null;
     }
 }
