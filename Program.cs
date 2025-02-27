@@ -5,7 +5,6 @@ unsafe class Program {
     static ListaVehiculos vehiculos = new ListaVehiculos();
     static ListaRepuestos repuestos = new ListaRepuestos();
 
-
     static void Main() {
         // Insertar usuario root
         usuarios.Insertar(0, "root", "", "root@gmail.com", "root123");
@@ -96,7 +95,8 @@ unsafe class Program {
             Console.WriteLine("\n--- Gestión de Usuarios ---");
             Console.WriteLine("1. Ver Usuario");
             Console.WriteLine("2. Eliminar Usuario");
-            Console.WriteLine("3. Regresar");
+            Console.WriteLine("3. Editar Usuario");  // Nueva opción
+            Console.WriteLine("4. Regresar");
             Console.Write("Seleccione una opción: ");
             string? opcion = Console.ReadLine();
             if (opcion == null) continue;
@@ -113,6 +113,9 @@ unsafe class Program {
                     usuarios.EliminarUsuario(idEliminar);
                     break;
                 case "3":
+                    EditarUsuario();  // Nueva función
+                    break;
+                case "4":
                     return;
                 default:
                     Console.WriteLine("Opción no válida.");
@@ -158,9 +161,44 @@ unsafe class Program {
         vehiculos.Insertar(idVehiculo, idUsuario, marca, modelo, placa, usuarios);
     }
 
-    
+    static void EditarUsuario() {
+        Console.Write("Ingrese el ID del usuario a editar: ");
+        if (!int.TryParse(Console.ReadLine(), out int id)) return;
+
+        NodoUsuario* usuario = usuarios.BuscarPorID(id);
+        if (usuario == null) {
+            Console.WriteLine("Usuario no encontrado.");
+            return;
+        }
+
+        Console.WriteLine("\n--- Editar Usuario ---");
+        Console.WriteLine($"Nombre actual: {GetString(usuario->Nombres)}");
+        Console.Write("Nuevo Nombre (deje vacío para no cambiar): ");
+        string? nuevoNombre = Console.ReadLine();
+        if (!string.IsNullOrEmpty(nuevoNombre)) CopyString(usuario->Nombres, nuevoNombre);
+
+        Console.WriteLine($"Apellidos actuales: {GetString(usuario->Apellidos)}");
+        Console.Write("Nuevos Apellidos (deje vacío para no cambiar): ");
+        string? nuevoApellidos = Console.ReadLine();
+        if (!string.IsNullOrEmpty(nuevoApellidos)) CopyString(usuario->Apellidos, nuevoApellidos);
+
+        Console.WriteLine($"Correo actual: {GetString(usuario->Correo)}");
+        Console.Write("Nuevo Correo (deje vacío para no cambiar): ");
+        string? nuevoCorreo = Console.ReadLine();
+        if (!string.IsNullOrEmpty(nuevoCorreo)) CopyString(usuario->Correo, nuevoCorreo);
+
+        Console.WriteLine("Usuario actualizado correctamente.");
+    }
 
     private static string GetString(char* charArray) {
         return new string(charArray).TrimEnd('\0');
+    }
+
+    private static void CopyString(char* destination, string source) {
+        int i;
+        for (i = 0; i < source.Length && i < 49; i++) {
+            destination[i] = source[i];
+        }
+        destination[i] = '\0';
     }
 }
