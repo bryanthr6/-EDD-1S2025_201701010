@@ -1,0 +1,11 @@
+digraph G {
+    rankdir=LR;
+    node [shape=box, style=filled, color=lightblue];
+    servicio1 [label="Servicio 1\nID Servicio: 999\nID Vehículo: 1\nID Repuesto: 1\nDetalles: fjdsfsdfs\nCosto: 1000"];
+    servicio1 -> servicio2;
+    servicio2 [label="Servicio 2\nID Servicio: 888\nID Vehículo: 1\nID Repuesto: 2\nDetalles: iwukdla\nCosto: 900"];
+    servicio2 -> servicio3;
+    servicio3 [label="Servicio 3\nID Servicio: 9\nID Vehículo: 2\nID Repuesto: 2\nDetalles: uwu\nCosto: 899"];
+    servicio3 -> servicio4;
+    servicio4 [label="Servicio 4\nID Servicio: 777\nID Vehículo: 2\nID Repuesto: 1\nDetalles: owo\nCosto: 200"];
+}
