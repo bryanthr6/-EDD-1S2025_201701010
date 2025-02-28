@@ -39,6 +39,12 @@ public class MainWindow : Window
             new GenerarReporteWindow().Show();
         };
 
+        Button cancelarFacturaButton = new Button("Cancelar Última Factura");
+        cancelarFacturaButton.Clicked += (sender, e) =>
+        {
+            new CancelarFacturaWindow().Show();
+        };
+
 
         Button logoutButton = new Button("Cerrar Sesión");
         logoutButton.Clicked += (sender, e) =>
@@ -53,6 +59,7 @@ public class MainWindow : Window
         vbox.PackStart(gestionUsuariosButton, false, false, 10);
         vbox.PackStart(generarServicioButton, false, false, 10);
         vbox.PackStart(generarReporteButton, false, false, 10);
+        vbox.PackStart(cancelarFacturaButton, false, false, 10);
         vbox.PackStart(logoutButton, false, false, 10);
 
         Add(vbox);

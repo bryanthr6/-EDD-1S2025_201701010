@@ -31,8 +31,18 @@ unsafe class ListaFacturas {
             writer.WriteLine("    rankdir=TB;"); // Orientación de arriba hacia abajo
             writer.WriteLine("    node [shape=box, style=filled, color=lightblue];");
 
+            // Contar la cantidad total de facturas para numerarlas de forma descendente
             NodoFactura* actual = tope;
-            int contador = 1; // Para numerar las facturas como Factura 1, Factura 2, etc.
+            int totalFacturas = 0;
+            while (actual != null)
+            {
+                totalFacturas++;
+                actual = actual->siguiente;
+            }
+
+            // Reiniciar el puntero al tope y asignar números descendentes
+            actual = tope;
+            int contador = totalFacturas; // Comenzamos con el número más alto
 
             while (actual != null)
             {
@@ -41,12 +51,12 @@ unsafe class ListaFacturas {
 
                 if (actual->siguiente != null)
                 {
-                    string nodoSiguiente = $"factura{contador + 1}";
-                    writer.WriteLine($"    {nodoActual} -> {nodoSiguiente} [dir=back];");
+                    string nodoSiguiente = $"factura{contador - 1}";
+                    writer.WriteLine($"    {nodoActual} -> {nodoSiguiente} [dir=forward];"); // 🔹 Flechas apuntan hacia abajo
                 }
 
                 actual = actual->siguiente;
-                contador++;
+                contador--; // 🔹 Ahora numeramos en orden descendente
             }
 
             writer.WriteLine("}");
@@ -80,15 +90,22 @@ unsafe class ListaFacturas {
 
 
 
+
+
     public void CancelarFactura() {
         if (tope == null) {
             Console.WriteLine("No hay facturas pendientes.");
             return;
         }
 
-        NodoFactura* temp = tope;
+        // Guardamos la factura que vamos a eliminar
+        NodoFactura* facturaEliminada = tope;
+        Console.WriteLine($"Factura ID: {facturaEliminada->ID} cancelada. Total: Q{facturaEliminada->Total}");
+
+        // Movemos el tope al siguiente nodo
         tope = tope->siguiente;
-        Console.WriteLine($"Factura ID: {temp->ID} pagada. Total: {temp->Total}");
-        Marshal.FreeHGlobal((IntPtr)temp);
+
+        // Liberamos la memoria de la factura eliminada
+        Marshal.FreeHGlobal((IntPtr)facturaEliminada);
     }
 }

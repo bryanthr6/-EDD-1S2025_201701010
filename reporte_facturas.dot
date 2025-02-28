@@ -1,11 +1,7 @@
 digraph G {
     rankdir=TB;
     node [shape=box, style=filled, color=lightblue];
-    factura1 [label="Factura 1\nID Factura: 777\nID Orden: 777\nTotal: 215.75"];
-    factura1 -> factura2 [dir=back];
-    factura2 [label="Factura 2\nID Factura: 9\nID Orden: 9\nTotal: 929.5"];
-    factura2 -> factura3 [dir=back];
-    factura3 [label="Factura 3\nID Factura: 888\nID Orden: 888\nTotal: 930.5"];
-    factura3 -> factura4 [dir=back];
-    factura4 [label="Factura 4\nID Factura: 999\nID Orden: 999\nTotal: 1015.75"];
+    factura2 [label="Factura 2\nID Factura: 2\nID Orden: 2\nTotal: 8.888889E+11"];
+    factura2 -> factura1 [dir=forward];
+    factura1 [label="Factura 1\nID Factura: 1\nID Orden: 1\nTotal: 666666700"];
 }
