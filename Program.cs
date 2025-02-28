@@ -2,25 +2,23 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
+using Gtk;
 
 unsafe class Program {
-    static ListaUsuarios usuarios = new ListaUsuarios();
-    static ListaVehiculos vehiculos = new ListaVehiculos();
-    static ListaRepuestos repuestos = new ListaRepuestos();
-    static ListaServicios servicios = new ListaServicios();
-    static ListaFacturas facturas = new ListaFacturas();
+    public static ListaUsuarios usuarios = new ListaUsuarios();
+    public static ListaVehiculos vehiculos = new ListaVehiculos();
+    public static ListaRepuestos repuestos = new ListaRepuestos();
+    public static ListaServicios servicios = new ListaServicios();
+    public static ListaFacturas facturas = new ListaFacturas();
 
     static void Main() {
         // Insertar usuario root
         usuarios.Insertar(0, "root", "", "root@gmail.com", "root123");
 
-        while (true) {
-            if (!Login()) {
-                Console.WriteLine("Credenciales incorrectas. Intente de nuevo.");
-                continue;
-            }
-            MostrarMenuRoot();
-        }
+        // Iniciar la interfaz gráfica con GTK
+        Application.Init();
+        new LoginWindow().Show();
+        Application.Run();
     }
 
     static bool Login() {
@@ -90,7 +88,7 @@ unsafe class Program {
     public Repuesto[] Repuestos { get; set; } = Array.Empty<Repuesto>();
     }
 
-    static void CargarDesdeJson(string rutaArchivo) {
+    public static void CargarDesdeJson(string rutaArchivo) {
         if (!File.Exists(rutaArchivo)) {
             Console.WriteLine("Archivo no encontrado.");
             return;

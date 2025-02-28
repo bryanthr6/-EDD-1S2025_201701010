@@ -4,4 +4,6 @@ digraph G {
 "1" [label="ID: 1\nNombre: Juan Pérez\nCorreo: juan.perez@mail.com"]
 "1" -> "2";
 "2" [label="ID: 2\nNombre: María Gómez\nCorreo: maria.gomez@mail.com"]
+"2" -> "3";
+"3" [label="ID: 3\nNombre: Bryant Herrera\nCorreo: bryant@gmail.com"]
 }

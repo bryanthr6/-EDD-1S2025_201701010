@@ -5,4 +5,7 @@ digraph G {
     vehiculo0 -> vehiculo1 [dir=forward];
     vehiculo0 -> vehiculo1 [dir=back];
     vehiculo1 [label="ID Vehículo: 2\nID Usuario: 2\nPlaca: XYZ456\nMarca: Ford\nModelo: Focus"];
+    vehiculo1 -> vehiculo2 [dir=forward];
+    vehiculo1 -> vehiculo2 [dir=back];
+    vehiculo2 [label="ID Vehículo: 654\nID Usuario: 1\nPlaca: 837SHD\nMarca: Honda\nModelo: CRV"];
 }
