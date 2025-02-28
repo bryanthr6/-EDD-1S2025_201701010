@@ -51,9 +51,7 @@ unsafe class Program {
 
             switch (opcion) {
                 case "1":
-                    Console.Write("Ingrese la ruta del archivo JSON: ");
-                    string? ruta = Console.ReadLine();
-                    if (!string.IsNullOrEmpty(ruta)) CargarDesdeJson(ruta);
+                    MostrarSubmenuCargaMasiva();
                     break;
                 case "2":
                     MostrarSubmenuIngresoManual();
@@ -88,7 +86,48 @@ unsafe class Program {
     public Repuesto[] Repuestos { get; set; } = Array.Empty<Repuesto>();
     }
 
-    public static void CargarDesdeJson(string rutaArchivo) {
+    static void MostrarSubmenuCargaMasiva() {
+        while (true) {
+            Console.WriteLine("\n--- Carga Masiva ---");
+            Console.WriteLine("1. Cargar Usuarios");
+            Console.WriteLine("2. Cargar Vehículos");
+            Console.WriteLine("3. Cargar Repuestos");
+            Console.WriteLine("4. Regresar");
+            Console.Write("Seleccione una opción: ");
+            string? opcion = Console.ReadLine();
+            if (opcion == null) continue;
+
+            Console.Write("Ingrese la ruta del archivo JSON: ");
+            string? ruta = Console.ReadLine();
+            if (string.IsNullOrEmpty(ruta)) {
+                Console.WriteLine("Ruta no válida.");
+                continue;
+            }
+
+            switch (opcion) {
+                case "1":
+                    CargarUsuariosDesdeJson(ruta);
+                    break;
+                case "2":
+                    CargarVehiculosDesdeJson(ruta);
+                    break;
+                case "3":
+                    CargarRepuestosDesdeJson(ruta);
+                    break;
+                case "4":
+                    return;
+                default:
+                    Console.WriteLine("Opción no válida.");
+                    break;
+            }
+        }
+    }
+
+
+
+    
+
+    public static void CargarUsuariosDesdeJson(string rutaArchivo) {
         if (!File.Exists(rutaArchivo)) {
             Console.WriteLine("Archivo no encontrado.");
             return;
@@ -98,28 +137,56 @@ unsafe class Program {
         try {
             DatosCargados datos = JsonSerializer.Deserialize<DatosCargados>(json) ?? new DatosCargados();
 
-            // Cargar usuarios
             foreach (var u in datos.Usuarios) {
                 usuarios.Insertar(u.ID, u.Nombres, u.Apellidos, u.Correo, u.Contrasenia);
             }
             Console.WriteLine($"Usuarios cargados: {datos.Usuarios.Length}");
+        } catch (Exception e) {
+            Console.WriteLine("Error al cargar usuarios: " + e.Message);
+        }
+    }
 
-            // Cargar vehículos
+
+   public static void CargarVehiculosDesdeJson(string rutaArchivo) {
+        if (!File.Exists(rutaArchivo)) {
+            Console.WriteLine("Archivo no encontrado.");
+            return;
+        }
+
+        string json = File.ReadAllText(rutaArchivo);
+        try {
+            DatosCargados datos = JsonSerializer.Deserialize<DatosCargados>(json) ?? new DatosCargados();
+
             foreach (var v in datos.Vehiculos) {
                 vehiculos.Insertar(v.ID, v.ID_Usuario, v.Marca, v.Modelo, v.Placa, usuarios);
             }
             Console.WriteLine($"Vehículos cargados: {datos.Vehiculos.Length}");
+        } catch (Exception e) {
+            Console.WriteLine("Error al cargar vehículos: " + e.Message);
+        }
+    }
 
-            // Cargar repuestos
+
+    public static void CargarRepuestosDesdeJson(string rutaArchivo) {
+        if (!File.Exists(rutaArchivo)) {
+            Console.WriteLine("Archivo no encontrado.");
+            return;
+        }
+
+        string json = File.ReadAllText(rutaArchivo);
+        try {
+            DatosCargados datos = JsonSerializer.Deserialize<DatosCargados>(json) ?? new DatosCargados();
+
             foreach (var r in datos.Repuestos) {
                 repuestos.Insertar(r.ID, r.RepuestoNombre, r.Costo);
             }
             Console.WriteLine($"Repuestos cargados: {datos.Repuestos.Length}");
-
         } catch (Exception e) {
-            Console.WriteLine("Error al cargar JSON: " + e.Message);
+            Console.WriteLine("Error al cargar repuestos: " + e.Message);
         }
     }
+
+
 
 
     static void CargarUsuarios(string json) {
