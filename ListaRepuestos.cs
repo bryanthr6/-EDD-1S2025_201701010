@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 unsafe class ListaRepuestos {
@@ -27,6 +29,75 @@ unsafe class ListaRepuestos {
             nuevo->siguiente = cabeza; // Cierra el ciclo
         }
     }
+
+    public void GenerarReporteRepuestos()
+    {
+        if (cabeza == null)
+        {
+            Console.WriteLine("No hay repuestos registrados.");
+            return;
+        }
+
+        string rutaDot = "reporte_repuestos.dot";
+        string rutaImagen = "reporte_repuestos.png";
+
+        using (StreamWriter writer = new StreamWriter(rutaDot))
+        {
+            writer.WriteLine("digraph G {");
+            writer.WriteLine("    rankdir=LR;"); // Orientación de izquierda a derecha
+            writer.WriteLine("    node [shape=box, style=filled, color=lightblue];");
+
+            NodoRepuesto* actual = cabeza;
+            int contador = 0;
+
+            do
+            {
+                string nodoActual = $"repuesto{contador}";
+                writer.WriteLine($"    {nodoActual} [label=\"ID: {actual->ID}\\nNombre: {GetString(actual->Nombre)}\\nPrecio: {actual->Precio}\"];");
+
+                actual = actual->siguiente;
+                contador++;
+            } while (actual != cabeza);
+
+            // Conectar los nodos en orden
+            actual = cabeza;
+            for (int i = 0; i < contador - 1; i++)
+            {
+                writer.WriteLine($"    repuesto{i} -> repuesto{i + 1};");
+            }
+
+            // Conectar el último nodo con el primero para cerrar el ciclo
+            writer.WriteLine($"    repuesto{contador - 1} -> repuesto0;");
+
+            writer.WriteLine("}");
+        }
+
+        // Generar la imagen con Graphviz
+        try
+        {
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = "dot",
+                Arguments = $"-Tpng {rutaDot} -o {rutaImagen}",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using (Process process = new Process { StartInfo = psi })
+            {
+                process.Start();
+                process.WaitForExit();
+            }
+
+            Console.WriteLine("Reporte de repuestos generado correctamente: " + rutaImagen);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error al generar el reporte: " + ex.Message);
+        }
+    }
+
 
     private void CopyString(char* destination, string source) {
         int i;

@@ -17,12 +17,16 @@ public class GenerarReporteWindow : Window
         Button reporteVehiculosButton = new Button("Reporte de Vehículos");
         reporteVehiculosButton.Clicked += (sender, e) => new ReporteVehiculoWindow().Show();
 
+        Button reporteRepuestosButton = new Button("Reporte de Repuestos");
+        reporteRepuestosButton.Clicked += (sender, e) => new ReporteRepuestoWindow().Show();
+
         Button regresarButton = new Button("Regresar");
         regresarButton.Clicked += (sender, e) => Destroy();
 
         vbox.PackStart(label, false, false, 5);
         vbox.PackStart(reporteUsuariosButton, false, false, 5);
         vbox.PackStart(reporteVehiculosButton, false, false, 5);
+        vbox.PackStart(reporteRepuestosButton, false, false, 5);
         vbox.PackStart(regresarButton, false, false, 5);
 
         Add(vbox);
