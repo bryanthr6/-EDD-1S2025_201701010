@@ -10,6 +10,7 @@ unsafe class Program {
     public static ListaRepuestos repuestos = new ListaRepuestos();
     public static ListaServicios servicios = new ListaServicios();
     public static ListaFacturas facturas = new ListaFacturas();
+    public static MatrizBitacora bitacora = new MatrizBitacora();
 
     static void Main() {
         // Insertar usuario root

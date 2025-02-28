@@ -25,6 +25,10 @@ public class GenerarReporteWindow : Window
 
         Button reporteFacturasButton = new Button("Reporte de Facturación");
         reporteFacturasButton.Clicked += (sender, e) => new ReporteFacturasWindow().Show();
+
+        Button reporteBitacoraButton = new Button("Reporte de Bitácora");
+        reporteBitacoraButton.Clicked += (sender, e) => new ReporteBitacoraWindow().Show();
+
         
         Button regresarButton = new Button("Regresar");
         regresarButton.Clicked += (sender, e) => Destroy();
@@ -35,6 +39,7 @@ public class GenerarReporteWindow : Window
         vbox.PackStart(reporteRepuestosButton, false, false, 5);
         vbox.PackStart(reporteServiciosButton, false, false, 5);
         vbox.PackStart(reporteFacturasButton, false, false, 5);
+        vbox.PackStart(reporteBitacoraButton, false, false, 5);
         vbox.PackStart(regresarButton, false, false, 5);
 
         Add(vbox);

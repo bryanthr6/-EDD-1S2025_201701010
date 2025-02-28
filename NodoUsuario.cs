@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-unsafe struct NodoUsuario {
+public unsafe struct NodoUsuario {
     public int ID;
     public fixed char Nombres[50];
     public fixed char Apellidos[50];

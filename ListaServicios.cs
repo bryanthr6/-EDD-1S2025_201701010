@@ -8,7 +8,6 @@ unsafe class ListaServicios {
     public NodoServicio* final = null;
 
     public void Insertar(int id, int idRepuesto, int idVehiculo, string detalles, float costo, ListaRepuestos repuestos, ListaVehiculos vehiculos) {
-        // Validar existencia del repuesto y del vehículo
         if (repuestos.BuscarPorID(idRepuesto) == null) {
             Console.WriteLine("ID de repuesto no encontrado.");
             return;
@@ -32,7 +31,12 @@ unsafe class ListaServicios {
             final->siguiente = nuevo;
             final = nuevo;
         }
+
+        //Insertar en la matriz dispersa de la bitácora
+        Program.bitacora.Insertar(idVehiculo, idRepuesto, detalles);
     }
+
+
 
     public void GenerarReporteServicios()
     {

@@ -23,12 +23,24 @@ public class LoginWindow : Window
         ShowAll();
     }
 
-    void OnLogin(string email, string password)
+    unsafe void OnLogin(string email, string password)
     {
+        // Verificar si es el usuario root
         if (email == "root@gmail.com" && password == "root123")
         {
-            Console.WriteLine("Inicio de sesión exitoso.");
+            Console.WriteLine("Inicio de sesión exitoso. (ROOT)");
             new MainWindow().Show();
+            Destroy();
+            return;
+        }
+
+        // Buscar el usuario en la lista
+        NodoUsuario* usuario = Program.usuarios.BuscarPorCorreo(email);
+
+        if (usuario != null && GetString(usuario->Contrasenia) == password)
+        {
+            Console.WriteLine($"Inicio de sesión exitoso. Bienvenido {GetString(usuario->Nombres)}");
+            new UsuarioWindow(usuario).Show();  // 🔥 Abre la ventana del usuario
             Destroy();
         }
         else
@@ -38,4 +50,12 @@ public class LoginWindow : Window
             dialog.Destroy();
         }
     }
+
+    // Función para convertir `char*` en `string`
+    private unsafe string GetString(char* charArray)
+    {
+        return new string(charArray).TrimEnd('\0');
+    }
+
+
 }
