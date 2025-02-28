@@ -29,6 +29,13 @@ public class GenerarReporteWindow : Window
         Button reporteBitacoraButton = new Button("Reporte de Bitácora");
         reporteBitacoraButton.Clicked += (sender, e) => new ReporteBitacoraWindow().Show();
 
+        Button topVehiculosServiciosButton = new Button("Top 5 Vehículos con Más Servicios");
+        topVehiculosServiciosButton.Clicked += (sender, e) => new VehiculosMasServicios().Show();
+
+        Button topVehiculosAntiguosButton = new Button("Top 5 Vehículos Más Antiguos");
+        topVehiculosAntiguosButton.Clicked += (sender, e) => new VehiculosMasAntiguos().Show();
+
+
         
         Button regresarButton = new Button("Regresar");
         regresarButton.Clicked += (sender, e) => Destroy();
@@ -40,6 +47,8 @@ public class GenerarReporteWindow : Window
         vbox.PackStart(reporteServiciosButton, false, false, 5);
         vbox.PackStart(reporteFacturasButton, false, false, 5);
         vbox.PackStart(reporteBitacoraButton, false, false, 5);
+        vbox.PackStart(topVehiculosServiciosButton, false, false, 5);
+        vbox.PackStart(topVehiculosAntiguosButton, false, false, 5);
         vbox.PackStart(regresarButton, false, false, 5);
 
         Add(vbox);

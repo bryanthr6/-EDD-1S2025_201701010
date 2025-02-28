@@ -45,9 +45,9 @@ public unsafe class CancelarFacturaWindow : Window
             return;
         }
 
-        idLabel.Text = $"📜 ID Factura: {factura->ID}";
-        ordenLabel.Text = $"🔄 ID Orden: {factura->ID_Orden}";
-        totalLabel.Text = $"💰 Total: Q{factura->Total:0.00}";
+        idLabel.Text = $"ID Factura: {factura->ID}";
+        ordenLabel.Text = $"ID Orden: {factura->ID_Orden}";
+        totalLabel.Text = $"Total: Q{factura->Total:0.00}";
     }
 
     private void CancelarFactura()

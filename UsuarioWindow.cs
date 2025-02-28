@@ -82,7 +82,7 @@ public unsafe class UsuarioWindow : Window
             {
                 if (vehiculo->ID_Vehiculo == servicio->ID_Vehiculo && vehiculo->ID_Usuario == usuario->ID)
                 {
-                    Label servicioLabel = new Label($"🔧 Servicio en {GetString(vehiculo->Marca)} {GetString(vehiculo->Modelo)} - {GetString(vehiculo->Placa)}\n" +
+                    Label servicioLabel = new Label($"Servicio en {GetString(vehiculo->Marca)} {GetString(vehiculo->Modelo)} - {GetString(vehiculo->Placa)}\n" +
                                                     $"Detalle: {GetString(servicio->Detalles)} | Costo: Q{servicio->Costo}");
                     contenedor.PackStart(servicioLabel, false, false, 5);
                     tieneServicios = true;
