@@ -1,452 +1,223 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
-using Gtk;
 
-unsafe class Program {
-    public static ListaUsuarios usuarios = new ListaUsuarios();
-    public static ListaVehiculos vehiculos = new ListaVehiculos();
-    public static ListaRepuestos repuestos = new ListaRepuestos();
-    public static ListaServicios servicios = new ListaServicios();
-    public static ListaFacturas facturas = new ListaFacturas();
-    public static MatrizBitacora bitacora = new MatrizBitacora();
+class Program {
+    static ListaUsuarios listaUsuarios = new ListaUsuarios();
+    static ListaVehiculos listaVehiculos = new ListaVehiculos();
+    static ArbolAVLRepuestos arbolRepuestos = new ArbolAVLRepuestos();
 
     static void Main() {
-        // Insertar usuario root
-        usuarios.Insertar(0, "root", "", "root@gmail.com", "root123");
-
-        // Iniciar la interfaz gráfica con GTK
-        Application.Init();
-        new LoginWindow().Show();
-        Application.Run();
+        Console.WriteLine("=== Sistema de Administración ===");
+        Login();
     }
 
-    static bool Login() {
-        Console.Write("Correo: ");
-        string? correo = Console.ReadLine();
-        if (string.IsNullOrEmpty(correo)) return false;
+    static void Login() {
+        string emailAdmin = "admin@usac.com";
+        string passwordAdmin = "admin123";
 
-        Console.Write("Contraseña: ");
-        string? contrasenia = Console.ReadLine();
-        if (string.IsNullOrEmpty(contrasenia)) return false;
-
-        NodoUsuario* usuario = usuarios.BuscarPorCorreo(correo);
-        if (usuario == null) return false;
-
-        return GetString(usuario->Contrasenia) == contrasenia;
-    }
-
-    static void MostrarMenuRoot() {
         while (true) {
-            Console.WriteLine("\n--- Menú Principal (Root) ---");
-            Console.WriteLine("1. Carga Masiva");
-            Console.WriteLine("2. Ingreso Manual");
-            Console.WriteLine("3. Gestión de Usuarios");
-            Console.WriteLine("4. Generar Servicio");
-            Console.WriteLine("5. Generar Reportes");
-            Console.WriteLine("6. Cerrar Sesión");
-            Console.Write("Seleccione una opción: ");
-            string? opcion = Console.ReadLine();
-            if (opcion == null) continue;
+            Console.Write("Ingrese su correo: ");
+            string email = Console.ReadLine() ?? "";
+            Console.Write("Ingrese su contraseña: ");
+            string password = Console.ReadLine() ?? "";
 
+            if (email == emailAdmin && password == passwordAdmin) {
+                Console.WriteLine("\n¡Acceso concedido!\n");
+                MostrarMenuAdministrador();
+                break;
+            } else {
+                Console.WriteLine("\nCredenciales incorrectas. Intente de nuevo.\n");
+            }
+        }
+    }
+
+    static void MostrarMenuAdministrador() {
+        while (true) {
+            Console.WriteLine("=== Menú Administrador ===");
+            Console.WriteLine("1. Carga masiva de usuarios");
+            Console.WriteLine("2. Carga masiva de vehículos");
+            Console.WriteLine("3. Carga masiva de repuestos");
+            Console.WriteLine("4. Buscar Usuario por ID");
+            Console.WriteLine("5. Eliminar Usuario por ID");
+            Console.WriteLine("6. Buscar Vehiculo por ID");
+            Console.WriteLine("7. Eliminar Vehiculo por ID");
+            Console.WriteLine("8. Ver Repuestos");
+            Console.WriteLine("9. Editar Repuesto por ID"); 
+            Console.WriteLine("10. Visualización de Repuestos");
+            Console.WriteLine("11. Generar Servicio");
+            Console.WriteLine("12. Ver Factura por ID");
+            Console.WriteLine("13. Salir"); 
+            Console.Write("Seleccione una opción: ");
+
+            string opcion = Console.ReadLine() ?? "";
             switch (opcion) {
                 case "1":
-                    MostrarSubmenuCargaMasiva();
+                    CargarUsuarios();
                     break;
                 case "2":
-                    MostrarSubmenuIngresoManual();
+                    CargarVehiculos();
                     break;
                 case "3":
-                    MostrarSubmenuGestionUsuarios();
+                    CargarRepuestos();
                     break;
                 case "4":
-                    GenerarServicio();
+                    BuscarUsuarioPorId();
                     break;
                 case "5":
-                    MostrarSubmenuReportes();
+                    EliminarUsuarioPorId();
                     break;
                 case "6":
-                    Console.WriteLine("Cerrando sesión...");
-                    usuarios.LiberarMemoria();
-                    vehiculos.LiberarMemoria();
-                    repuestos.LiberarMemoria();
-                    servicios = new ListaServicios(); // Reiniciar lista de servicios
-                    facturas = new ListaFacturas();   // Reiniciar pila de facturas
-                    return;
+                    BuscarVehiculoPorId();
+                    break;
+                case "7":
+                    EliminarVehiculoPorId();
+                    break;
+                case "8":
+                    arbolRepuestos.MostrarRepuestos();
+                    break;
+                case "9":
+                    Console.Write("Ingrese el ID del repuesto a editar: ");
+                    if (int.TryParse(Console.ReadLine(), out int idRepuesto)) {
+                        arbolRepuestos.EditarRepuestoPorId(idRepuesto);
+                    } else {
+                        Console.WriteLine("ID inválido. Intente nuevamente.");
+                    }
+                    break;
+                case "10":
+                    Console.WriteLine("Seleccione tipo de recorrido:");
+                    Console.WriteLine("1. PreOrden");
+                    Console.WriteLine("2. InOrden");
+                    Console.WriteLine("3. PostOrden");
+                    Console.Write("Opción: ");
+                    string recorrido = Console.ReadLine() ?? "";
+
+                    switch (recorrido) {
+                        case "1":
+                            arbolRepuestos.MostrarRepuestosPreOrden();
+                            break;
+                        case "2":
+                            arbolRepuestos.MostrarRepuestos(); // inorden ya está implementado
+                            break;
+                        case "3":
+                            arbolRepuestos.MostrarRepuestosPostOrden();
+                            break;
+                        default:
+                            Console.WriteLine("Opción de recorrido no válida.");
+                            break;
+                    }
+                    break;
+
+                case "11":
+                    Console.WriteLine("Saliendo del sistema...");
+                    return; // Salir del programa
+
                 default:
-                    Console.WriteLine("Opción no válida.");
-                    break;
-            }
-        }
-    }
-    
-    class DatosCargados {
-    public Usuario[] Usuarios { get; set; } = Array.Empty<Usuario>();
-    public Vehiculo[] Vehiculos { get; set; } = Array.Empty<Vehiculo>();
-    public Repuesto[] Repuestos { get; set; } = Array.Empty<Repuesto>();
-    }
-
-    static void MostrarSubmenuCargaMasiva() {
-        while (true) {
-            Console.WriteLine("\n--- Carga Masiva ---");
-            Console.WriteLine("1. Cargar Usuarios");
-            Console.WriteLine("2. Cargar Vehículos");
-            Console.WriteLine("3. Cargar Repuestos");
-            Console.WriteLine("4. Regresar");
-            Console.Write("Seleccione una opción: ");
-            string? opcion = Console.ReadLine();
-            if (opcion == null) continue;
-
-            Console.Write("Ingrese la ruta del archivo JSON: ");
-            string? ruta = Console.ReadLine();
-            if (string.IsNullOrEmpty(ruta)) {
-                Console.WriteLine("Ruta no válida.");
-                continue;
-            }
-
-            switch (opcion) {
-                case "1":
-                    CargarUsuariosDesdeJson(ruta);
-                    break;
-                case "2":
-                    CargarVehiculosDesdeJson(ruta);
-                    break;
-                case "3":
-                    CargarRepuestosDesdeJson(ruta);
-                    break;
-                case "4":
-                    return;
-                default:
-                    Console.WriteLine("Opción no válida.");
+                    Console.WriteLine("Opción no válida. Intente nuevamente.");
                     break;
             }
         }
     }
 
+    static void CargarUsuarios() {
+        DatosJson datos = LeerJson();
+        if (datos.Usuarios.Count == 0) return;
 
+        foreach (var usuario in datos.Usuarios) {
+            listaUsuarios.AgregarUsuario(usuario.ID, usuario.Nombres, usuario.Apellidos, usuario.Correo, usuario.Edad, usuario.Contrasenia);
+        }
+        Console.WriteLine($"Se han cargado {datos.Usuarios.Count} usuarios.");
+    }
 
-    
+    static void CargarVehiculos() {
+        DatosJson datos = LeerJson();
+        if (datos.Vehiculos.Count == 0) return;
 
-    public static void CargarUsuariosDesdeJson(string rutaArchivo) {
-        if (!File.Exists(rutaArchivo)) {
-            Console.WriteLine("Archivo no encontrado.");
-            return;
+        foreach (var vehiculo in datos.Vehiculos) {
+            listaVehiculos.AgregarVehiculo(vehiculo.ID, vehiculo.ID_Usuario, vehiculo.Marca, vehiculo.Modelo, vehiculo.Placa);
+        }
+        Console.WriteLine($"Se han cargado {datos.Vehiculos.Count} vehículos.");
+    }
+
+    static void CargarRepuestos() {
+        DatosJson datos = LeerJson();
+        if (datos.Repuestos.Count == 0) return;
+
+        foreach (var repuesto in datos.Repuestos) {
+            arbolRepuestos.Insertar(repuesto.ID, repuesto.Repuesto, repuesto.Detalles, (int)repuesto.Costo);
+        }
+        Console.WriteLine($"Se han cargado {datos.Repuestos.Count} repuestos.");
+    }
+
+    static DatosJson LeerJson() {
+        Console.Write("Ingrese la ruta del archivo JSON: ");
+        string rutaArchivo = Console.ReadLine() ?? "";
+
+        Console.WriteLine($"Directorio actual: {Directory.GetCurrentDirectory()}");
+
+        string rutaCompleta = Path.Combine(Directory.GetCurrentDirectory(), rutaArchivo);
+
+        if (!File.Exists(rutaArchivo) && !File.Exists(rutaCompleta)) {
+            Console.WriteLine("El archivo JSON no se encontró. Verifique la ruta e intente nuevamente.");
+            Console.WriteLine($"Se buscó en: {rutaArchivo}");
+            Console.WriteLine($"Y también en: {rutaCompleta}");
+            return new DatosJson { Usuarios = new List<UsuarioJson>(), Vehiculos = new List<VehiculoJson>(), Repuestos = new List<RepuestoJson>() };
         }
 
-        string json = File.ReadAllText(rutaArchivo);
+        string rutaFinal = File.Exists(rutaArchivo) ? rutaArchivo : rutaCompleta;
+
         try {
-            DatosCargados datos = JsonSerializer.Deserialize<DatosCargados>(json) ?? new DatosCargados();
-
-            foreach (var u in datos.Usuarios) {
-                usuarios.Insertar(u.ID, u.Nombres, u.Apellidos, u.Correo, u.Contrasenia);
-            }
-            Console.WriteLine($"Usuarios cargados: {datos.Usuarios.Length}");
-        } catch (Exception e) {
-            Console.WriteLine("Error al cargar usuarios: " + e.Message);
+            string json = File.ReadAllText(rutaFinal);
+            return JsonSerializer.Deserialize<DatosJson>(json) ?? new DatosJson();
+        } catch (Exception ex) {
+            Console.WriteLine($"Error al leer el archivo JSON: {ex.Message}");
+            return new DatosJson();
         }
     }
 
-
-   public static void CargarVehiculosDesdeJson(string rutaArchivo) {
-        if (!File.Exists(rutaArchivo)) {
-            Console.WriteLine("Archivo no encontrado.");
-            return;
+    static unsafe void BuscarUsuarioPorId() {
+    Console.Write("Ingrese el ID del usuario a buscar: ");
+    if (int.TryParse(Console.ReadLine(), out int id)) {
+        NodoUsuario* usuario = listaUsuarios.BuscarPorId(id); // Buscamos el usuario
+        if (usuario != null) {
+            // Si el usuario es encontrado, mostramos sus datos
+            Console.WriteLine($"ID: {usuario->Id}");
+            Console.WriteLine($"Nombre: {listaUsuarios.PtrToString(usuario->Nombres)} {listaUsuarios.PtrToString(usuario->Apellidos)}");
+            Console.WriteLine($"Correo: {listaUsuarios.PtrToString(usuario->Correo)}");
+            Console.WriteLine($"Edad: {usuario->Edad}");
+        }else {
+            Console.WriteLine("Usuario no encontrado.");
         }
+    } else {
+        Console.WriteLine("ID inválido.");
+    }
+}
 
-        string json = File.ReadAllText(rutaArchivo);
-        try {
-            DatosCargados datos = JsonSerializer.Deserialize<DatosCargados>(json) ?? new DatosCargados();
-
-            foreach (var v in datos.Vehiculos) {
-                vehiculos.Insertar(v.ID, v.ID_Usuario, v.Marca, v.Modelo, v.Placa, usuarios);
-            }
-            Console.WriteLine($"Vehículos cargados: {datos.Vehiculos.Length}");
-        } catch (Exception e) {
-            Console.WriteLine("Error al cargar vehículos: " + e.Message);
+    static void EliminarUsuarioPorId() {
+        Console.Write("Ingrese el ID del usuario a eliminar: ");
+        if (int.TryParse(Console.ReadLine(), out int id)) {
+            listaUsuarios.EliminarPorId(id);
+        } else {
+            Console.WriteLine("ID inválido.");
         }
     }
 
-
-    public static void CargarRepuestosDesdeJson(string rutaArchivo) {
-        if (!File.Exists(rutaArchivo)) {
-            Console.WriteLine("Archivo no encontrado.");
-            return;
-        }
-
-        string json = File.ReadAllText(rutaArchivo);
-        try {
-            DatosCargados datos = JsonSerializer.Deserialize<DatosCargados>(json) ?? new DatosCargados();
-
-            foreach (var r in datos.Repuestos) {
-                repuestos.Insertar(r.ID, r.RepuestoNombre, r.Costo);
-            }
-            Console.WriteLine($"Repuestos cargados: {datos.Repuestos.Length}");
-        } catch (Exception e) {
-            Console.WriteLine("Error al cargar repuestos: " + e.Message);
+    static unsafe void BuscarVehiculoPorId() {
+        Console.Write("Ingrese el ID del vehículo a buscar: ");
+        if (int.TryParse(Console.ReadLine(), out int id)) {
+            NodoVehiculo* vehiculo = listaVehiculos.BuscarPorId(id);
+            Console.WriteLine(listaVehiculos.ObtenerInfoVehiculo(vehiculo));
+        } else {
+            Console.WriteLine("ID inválido.");
         }
     }
 
-
-
-
-    static void CargarUsuarios(string json) {
-        try {
-            Usuario[] usuariosCargados = JsonSerializer.Deserialize<Usuario[]>(json) ?? Array.Empty<Usuario>();
-
-            foreach (var u in usuariosCargados) {
-                usuarios.Insertar(u.ID, u.Nombres, u.Apellidos, u.Correo, u.Contrasenia);
-            }
-            Console.WriteLine("Usuarios cargados correctamente.");
-        } catch (Exception e) {
-            Console.WriteLine("Error al cargar usuarios: " + e.Message);
+    static void EliminarVehiculoPorId() {
+        Console.Write("Ingrese el ID del vehículo a eliminar: ");
+        if (int.TryParse(Console.ReadLine(), out int id)) {
+            listaVehiculos.EliminarPorId(id);
+        } else {
+            Console.WriteLine("ID inválido.");
         }
-    }
-
-    static void CargarVehiculos(string json) {
-        try {
-            Vehiculo[] vehiculosCargados = JsonSerializer.Deserialize<Vehiculo[]>(json) ?? Array.Empty<Vehiculo>();
-
-            foreach (var v in vehiculosCargados) {
-                vehiculos.Insertar(v.ID, v.ID_Usuario, v.Marca, v.Modelo, v.Placa, usuarios);
-            }
-            Console.WriteLine("Vehículos cargados correctamente.");
-        } catch (Exception e) {
-            Console.WriteLine("Error al cargar vehículos: " + e.Message);
-        }
-    }
-
-
-    static void CargarRepuestos(string json) {
-        try {
-            Repuesto[] repuestosCargados = JsonSerializer.Deserialize<Repuesto[]>(json) ?? Array.Empty<Repuesto>();
-
-            foreach (var r in repuestosCargados) {
-                repuestos.Insertar(r.ID, r.RepuestoNombre, r.Costo);
-            }
-            Console.WriteLine("Repuestos cargados correctamente.");
-        } catch (Exception e) {
-            Console.WriteLine("Error al cargar repuestos: " + e.Message);
-        }
-    }
-
-    static void MostrarSubmenuIngresoManual() {
-        while (true) {
-            Console.WriteLine("\n--- Ingreso Manual ---");
-            Console.WriteLine("1. Usuario");
-            Console.WriteLine("2. Vehículo");
-            Console.WriteLine("3. Repuesto");
-            Console.WriteLine("4. Regresar");
-            Console.Write("Seleccione una opción: ");
-            string? opcion = Console.ReadLine();
-            if (opcion == null) continue;
-
-            switch (opcion) {
-                case "1":
-                    IngresarUsuario();
-                    break;
-                case "2":
-                    IngresarVehiculo();
-                    break;
-                case "3":
-                    IngresarRepuesto();
-                    break;
-                case "4":
-                    return;
-                default:
-                    Console.WriteLine("Opción no válida.");
-                    break;
-            }
-        }
-    }
-
-    static void MostrarSubmenuGestionUsuarios() {
-        while (true) {
-            Console.WriteLine("\n--- Gestión de Usuarios ---");
-            Console.WriteLine("1. Ver Usuario");
-            Console.WriteLine("2. Eliminar Usuario");
-            Console.WriteLine("3. Editar Usuario");
-            Console.WriteLine("4. Regresar");
-            Console.Write("Seleccione una opción: ");
-            string? opcion = Console.ReadLine();
-            if (opcion == null) continue;
-
-            switch (opcion) {
-                case "1":
-                    Console.Write("Ingrese el ID del usuario: ");
-                    if (!int.TryParse(Console.ReadLine(), out int id)) return;
-                    usuarios.VerUsuario(id, vehiculos);
-                    break;
-                case "2":
-                    Console.Write("Ingrese el ID del usuario a eliminar: ");
-                    if (!int.TryParse(Console.ReadLine(), out int idEliminar)) return;
-                    usuarios.EliminarUsuario(idEliminar);
-                    break;
-                case "3":
-                    EditarUsuario();
-                    break;
-                case "4":
-                    return;
-                default:
-                    Console.WriteLine("Opción no válida.");
-                    break;
-            }
-        }
-    }
-
-    static void IngresarUsuario() {
-        Console.Write("ID: ");
-        if (!int.TryParse(Console.ReadLine(), out int id)) return;
-        Console.Write("Nombres: ");
-        string? nombres = Console.ReadLine();
-        if (string.IsNullOrEmpty(nombres)) return;
-        Console.Write("Apellidos: ");
-        string? apellidos = Console.ReadLine();
-        if (string.IsNullOrEmpty(apellidos)) return;
-        Console.Write("Correo: ");
-        string? correo = Console.ReadLine();
-        if (string.IsNullOrEmpty(correo)) return;
-        Console.Write("Contraseña: ");
-        string? contrasenia = Console.ReadLine();
-        if (string.IsNullOrEmpty(contrasenia)) return;
-
-        usuarios.Insertar(id, nombres, apellidos, correo, contrasenia);
-    }
-
-    static void EditarUsuario() {
-        Console.Write("Ingrese el ID del usuario a editar: ");
-        if (!int.TryParse(Console.ReadLine(), out int id)) return;
-
-        NodoUsuario* usuario = usuarios.BuscarPorID(id);
-        if (usuario == null) {
-        Console.WriteLine("Usuario no encontrado.");
-        return;
-        }
-
-        Console.WriteLine("\n--- Editar Usuario ---");
-        Console.WriteLine($"Nombre actual: {GetString(usuario->Nombres)}");
-        Console.Write("Nuevo Nombre (deje vacío para no cambiar): ");
-        string? nuevoNombre = Console.ReadLine();
-        if (!string.IsNullOrEmpty(nuevoNombre)) CopyString(usuario->Nombres, nuevoNombre);
-
-        Console.WriteLine($"Apellidos actuales: {GetString(usuario->Apellidos)}");
-        Console.Write("Nuevos Apellidos (deje vacío para no cambiar): ");
-        string? nuevoApellidos = Console.ReadLine();
-        if (!string.IsNullOrEmpty(nuevoApellidos)) CopyString(usuario->Apellidos, nuevoApellidos);
-
-        Console.WriteLine($"Correo actual: {GetString(usuario->Correo)}");
-        Console.Write("Nuevo Correo (deje vacío para no cambiar): ");
-        string? nuevoCorreo = Console.ReadLine();
-        if (!string.IsNullOrEmpty(nuevoCorreo)) CopyString(usuario->Correo, nuevoCorreo);
-
-        Console.WriteLine("Usuario actualizado correctamente.");
-        }
-
-
-    static void IngresarVehiculo() {
-        Console.Write("ID Vehículo: ");
-        if (!int.TryParse(Console.ReadLine(), out int idVehiculo)) return;
-        Console.Write("ID Usuario: ");
-        if (!int.TryParse(Console.ReadLine(), out int idUsuario)) return;
-        Console.Write("Marca: ");
-        string? marca = Console.ReadLine();
-        if (string.IsNullOrEmpty(marca)) return;
-        Console.Write("Modelo: ");
-        string? modelo = Console.ReadLine();
-        if (string.IsNullOrEmpty(modelo)) return;
-        Console.Write("Placa: ");
-        string? placa = Console.ReadLine();
-        if (string.IsNullOrEmpty(placa)) return;
-
-        vehiculos.Insertar(idVehiculo, idUsuario, marca, modelo, placa, usuarios);
-    }
-
-    static void IngresarRepuesto() {
-        Console.Write("ID Repuesto: ");
-        if (!int.TryParse(Console.ReadLine(), out int id)) return;
-        Console.Write("Nombre del Repuesto: ");
-        string? nombre = Console.ReadLine();
-        if (string.IsNullOrEmpty(nombre)) return;
-        Console.Write("Precio: ");
-        if (!float.TryParse(Console.ReadLine(), out float precio)) return;
-
-        repuestos.Insertar(id, nombre, precio);
-    }
-
-    static void GenerarServicio() {
-        Console.Write("ID del servicio: ");
-        if (!int.TryParse(Console.ReadLine(), out int idServicio)) return;
-
-        Console.Write("ID del vehículo: ");
-        if (!int.TryParse(Console.ReadLine(), out int idVehiculo)) return;
-
-        Console.Write("ID del repuesto: ");
-        if (!int.TryParse(Console.ReadLine(), out int idRepuesto)) return;
-
-        Console.Write("Detalles del servicio: ");
-        string? detalles = Console.ReadLine();
-        if (string.IsNullOrEmpty(detalles)) return;
-
-        Console.Write("Costo del servicio: ");
-        if (!float.TryParse(Console.ReadLine(), out float costoServicio)) return;
-
-        // Validar existencia del vehículo y repuesto
-        if (vehiculos.BuscarPorID(idVehiculo) == null) {
-            Console.WriteLine("Error: Vehículo no encontrado.");
-            return;
-        }
-
-        NodoRepuesto* repuesto = repuestos.BuscarPorID(idRepuesto);
-        if (repuesto == null) {
-            Console.WriteLine("Error: Repuesto no encontrado.");
-            return;
-        }
-
-        // Insertar servicio en la cola
-        servicios.Insertar(idServicio, idRepuesto, idVehiculo, detalles, costoServicio, repuestos, vehiculos);
-        Console.WriteLine("Servicio registrado exitosamente.");
-
-        // Generar factura
-        float total = costoServicio + repuesto->Precio;
-        facturas.GenerarFactura(idServicio, idServicio, total);
-        Console.WriteLine($"Factura generada: ID {idServicio}, Total: {total}");
-    }
-
-    static void MostrarSubmenuReportes() {
-        while (true) {
-            Console.WriteLine("\n--- Generar Reportes ---");
-            Console.WriteLine("1. Usuarios");
-            Console.WriteLine("2. Vehículos");
-            Console.WriteLine("3. Regresar");
-            Console.Write("Seleccione una opción: ");
-            string? opcion = Console.ReadLine();
-            if (opcion == null) continue;
-
-            switch (opcion) {
-                case "1":
-                    usuarios.GenerarReporteUsuarios();
-                    break;
-                case "2":
-                    vehiculos.GenerarReporteVehiculos();
-                    break;
-                case "3":
-                    return;
-                default:
-                    Console.WriteLine("Opción no válida.");
-                    break;
-            }
-        }
-    }
-
-    private static string GetString(char* charArray) {
-        return new string(charArray).TrimEnd('\0');
-    }
-
-    private static void CopyString(char* destination, string source) {
-        int i;
-        for (i = 0; i < source.Length && i < 49; i++) {
-            destination[i] = source[i];
-        }
-        destination[i] = '\0';
     }
 }

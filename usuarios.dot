@@ -1,7 +1,0 @@
-digraph G {
-    rankdir=LR;
-  node [shape=box, style=filled, color=lightblue];
-"1" [label="ID: 1\nNombre: Juan Pérez\nCorreo: juan.perez@mail.com"]
-"1" -> "2";
-"2" [label="ID: 2\nNombre: María Gómez\nCorreo: maria.gomez@mail.com"]
-}
