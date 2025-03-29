@@ -119,7 +119,7 @@ unsafe class ListaVehiculos {
             $"Placa: {PtrToString(vehiculo->Placa)}";
     }
 
-    private string PtrToString(char* ptr) {
+    public string PtrToString(char* ptr) {
         var resultado = new System.Text.StringBuilder();
         for (int i = 0; i < 50 && ptr[i] != '\0'; i++) {
             resultado.Append(ptr[i]);

@@ -1,122 +1,28 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
+using Gtk;
 
-unsafe class Program 
+unsafe class Program
 {
-    static ListaUsuarios listaUsuarios = new ListaUsuarios();
-    static ListaVehiculos listaVehiculos = new ListaVehiculos();
-    static ArbolAVLRepuestos arbolRepuestos = new ArbolAVLRepuestos();
-    static ArbolBinarioServicios arbolServicios = new ArbolBinarioServicios(
+    public static ListaUsuarios listaUsuarios = new ListaUsuarios();
+    public static ListaVehiculos listaVehiculos = new ListaVehiculos();
+    public static ArbolAVLRepuestos arbolRepuestos = new ArbolAVLRepuestos();
+    public static ArbolBinarioServicios arbolServicios = new ArbolBinarioServicios(
         id => arbolRepuestos.Buscar(id) != null,
         id => listaVehiculos.BuscarPorId(id) != null
     );
-    static ArbolB5Facturas arbolFacturas = new ArbolB5Facturas();
+    public static ArbolB5Facturas arbolFacturas = new ArbolB5Facturas();
 
-    static void Main() 
+    public static void Main()
     {
-        // Inicializar el árbol de servicios con las funciones de validación
-        arbolServicios = new ArbolBinarioServicios(
-            id => arbolRepuestos.Buscar(id) != null,
-            id => listaVehiculos.BuscarPorId(id) != null
-        );
+        Application.Init();
 
-        Console.WriteLine("=== Sistema de Administración ===");
-        Login();
-    }
+        // Abre la ventana de login
+        WindowLogin loginWindow = new WindowLogin();
+        loginWindow.Show();
 
-    static void Login() 
-    {
-        string emailAdmin = "admin@usac.com";
-        string passwordAdmin = "admin123";
-
-        while (true) 
-        {
-            Console.Write("Ingrese su correo: ");
-            string email = Console.ReadLine() ?? "";
-            Console.Write("Ingrese su contraseña: ");
-            string password = Console.ReadLine() ?? "";
-
-            if (email == emailAdmin && password == passwordAdmin) 
-            {
-                Console.WriteLine("\n¡Acceso concedido!\n");
-                MostrarMenuAdministrador();
-                break;
-            } 
-            else 
-            {
-                Console.WriteLine("\nCredenciales incorrectas. Intente de nuevo.\n");
-            }
-        }
-    }
-
-    static void MostrarMenuAdministrador() 
-    {
-        while (true) 
-        {
-            Console.WriteLine("\n=== Menú Administrador ===");
-            Console.WriteLine("1. Carga masiva de usuarios");
-            Console.WriteLine("2. Carga masiva de vehículos");
-            Console.WriteLine("3. Carga masiva de repuestos");
-            Console.WriteLine("4. Buscar Usuario por ID");
-            Console.WriteLine("5. Eliminar Usuario por ID");
-            Console.WriteLine("6. Buscar Vehiculo por ID");
-            Console.WriteLine("7. Eliminar Vehiculo por ID");
-            Console.WriteLine("8. Ver Repuestos");
-            Console.WriteLine("9. Editar Repuesto por ID"); 
-            Console.WriteLine("10. Visualización de Repuestos");
-            Console.WriteLine("11. Generar Servicio");
-            Console.WriteLine("12. Ver Factura por ID");
-            Console.WriteLine("13. Salir"); 
-            Console.Write("Seleccione una opción: ");
-
-            string opcion = Console.ReadLine() ?? "";
-            switch (opcion) 
-            {
-                case "1":
-                    CargarUsuarios();
-                    break;
-                case "2":
-                    CargarVehiculos();
-                    break;
-                case "3":
-                    CargarRepuestos();
-                    break;
-                case "4":
-                    BuscarUsuarioPorId();
-                    break;
-                case "5":
-                    EliminarUsuarioPorId();
-                    break;
-                case "6":
-                    BuscarVehiculoPorId();
-                    break;
-                case "7":
-                    EliminarVehiculoPorId();
-                    break;
-                case "8":
-                    arbolRepuestos.MostrarRepuestos();
-                    break;
-                case "9":
-                    EditarRepuesto();
-                    break;
-                case "10":
-                    MostrarRepuestosOrden();
-                    break;
-                case "11":
-                    GenerarServicio();
-                    break;
-                case "12":
-                    VerFacturaPorId();
-                    break;
-                case "13":
-                    Console.WriteLine("Saliendo del sistema...");
-                    return;
-                default:
-                    Console.WriteLine("Opción no válida. Intente nuevamente.");
-                    break;
-            }
-        }
+        Application.Run();
     }
 
     static void GenerarServicio()
