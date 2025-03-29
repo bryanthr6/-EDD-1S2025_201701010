@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 
-// Estructura ahora es pública
 public unsafe struct NodoUsuario 
 {
     public int Id;
@@ -49,6 +48,8 @@ public unsafe class ListaUsuarios
     {
         cabeza = null;
     }
+
+    public NodoUsuario* GetCabeza() => cabeza;
 
     public void AgregarUsuario(int id, string nombres, string apellidos, string correo, int edad, string contrasenia) 
     {

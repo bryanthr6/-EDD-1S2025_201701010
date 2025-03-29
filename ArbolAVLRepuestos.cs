@@ -175,81 +175,86 @@ unsafe class ArbolAVLRepuestos {
         Console.WriteLine("Repuesto actualizado correctamente.");
     }
 
-    // Métodos para mostrar repuestos (nuevas versiones que devuelven strings)
-    public string ObtenerRepuestosInOrden() {
+    // Métodos para mostrar repuestos en diferentes órdenes
+    public string ObtenerRepuestosInOrden()
+    {
         var sb = new StringBuilder();
-        if (raiz == null) {
-            sb.AppendLine("No hay repuestos cargados.");
-            return sb.ToString();
-        }
-
-        sb.AppendLine("ID\tRepuesto\tDetalles\tCosto");
-        sb.AppendLine("--------------------------------------------------");
         ObtenerInOrden(raiz, sb);
         return sb.ToString();
     }
 
-    public string ObtenerRepuestosPreOrden() {
+    public string ObtenerRepuestosPreOrden()
+    {
         var sb = new StringBuilder();
-        if (raiz == null) {
-            sb.AppendLine("No hay repuestos cargados.");
-            return sb.ToString();
-        }
-
-        sb.AppendLine("ID\tRepuesto\tDetalles\tCosto");
-        sb.AppendLine("--------------------------------------------------");
         ObtenerPreOrden(raiz, sb);
         return sb.ToString();
     }
 
-    public string ObtenerRepuestosPostOrden() {
+    public string ObtenerRepuestosPostOrden()
+    {
         var sb = new StringBuilder();
-        if (raiz == null) {
-            sb.AppendLine("No hay repuestos cargados.");
-            return sb.ToString();
-        }
-
-        sb.AppendLine("ID\tRepuesto\tDetalles\tCosto");
-        sb.AppendLine("--------------------------------------------------");
         ObtenerPostOrden(raiz, sb);
         return sb.ToString();
     }
 
-    private void ObtenerInOrden(NodoRepuesto* nodo, StringBuilder sb) {
+    private void ObtenerInOrden(NodoRepuesto* nodo, StringBuilder sb)
+    {
         if (nodo == null) return;
-
+        
         ObtenerInOrden(nodo->Izquierdo, sb);
-        sb.AppendLine($"{nodo->Id}\t{PtrToString(nodo->Nombre)}\t{PtrToString(nodo->Detalles)}\tQ{nodo->Precio}");
+        sb.AppendLine($"ID: {nodo->Id}, Nombre: {PtrToString(nodo->Nombre)}, " +
+                     $"Detalles: {PtrToString(nodo->Detalles)}, Precio: Q{nodo->Precio}");
         ObtenerInOrden(nodo->Derecho, sb);
     }
 
-    private void ObtenerPreOrden(NodoRepuesto* nodo, StringBuilder sb) {
+    private void ObtenerPreOrden(NodoRepuesto* nodo, StringBuilder sb)
+    {
         if (nodo == null) return;
         
-        sb.AppendLine($"{nodo->Id}\t{PtrToString(nodo->Nombre)}\t{PtrToString(nodo->Detalles)}\tQ{nodo->Precio}");
+        sb.AppendLine($"ID: {nodo->Id}, Nombre: {PtrToString(nodo->Nombre)}, " +
+                     $"Detalles: {PtrToString(nodo->Detalles)}, Precio: Q{nodo->Precio}");
         ObtenerPreOrden(nodo->Izquierdo, sb);
         ObtenerPreOrden(nodo->Derecho, sb);
     }
 
-    private void ObtenerPostOrden(NodoRepuesto* nodo, StringBuilder sb) {
+    private void ObtenerPostOrden(NodoRepuesto* nodo, StringBuilder sb)
+    {
         if (nodo == null) return;
         
         ObtenerPostOrden(nodo->Izquierdo, sb);
         ObtenerPostOrden(nodo->Derecho, sb);
-        sb.AppendLine($"{nodo->Id}\t{PtrToString(nodo->Nombre)}\t{PtrToString(nodo->Detalles)}\tQ{nodo->Precio}");
+        sb.AppendLine($"ID: {nodo->Id}, Nombre: {PtrToString(nodo->Nombre)}, " +
+                     $"Detalles: {PtrToString(nodo->Detalles)}, Precio: Q{nodo->Precio}");
     }
 
-    // Métodos originales que escriben en consola (los mantengo por compatibilidad)
-    public void MostrarRepuestos() {
-        Console.WriteLine(ObtenerRepuestosInOrden());
+    // Métodos para generación de reportes con Graphviz
+    public unsafe string GenerarDot()
+    {
+        var sb = new StringBuilder();
+        GenerarDotRec(raiz, sb);
+        return sb.ToString();
     }
 
-    public void MostrarRepuestosPreOrden() {
-        Console.WriteLine(ObtenerRepuestosPreOrden());
-    }
+    private unsafe void GenerarDotRec(NodoRepuesto* nodo, StringBuilder sb)
+    {
+        if (nodo == null) return;
 
-    public void MostrarRepuestosPostOrden() {
-        Console.WriteLine(ObtenerRepuestosPostOrden());
+        string nombre = PtrToString(nodo->Nombre);
+        string detalles = PtrToString(nodo->Detalles);
+        
+        sb.AppendLine($"  repuesto{nodo->Id} [label=\"{{ID: {nodo->Id}|Repuesto: {nombre}|Detalles: {detalles}|Costo: Q{nodo->Precio}}}\"];");
+        
+        if (nodo->Izquierdo != null)
+        {
+            sb.AppendLine($"  repuesto{nodo->Id} -> repuesto{nodo->Izquierdo->Id} [label=\"Izq\", color=\"red\"];");
+            GenerarDotRec(nodo->Izquierdo, sb);
+        }
+        
+        if (nodo->Derecho != null)
+        {
+            sb.AppendLine($"  repuesto{nodo->Id} -> repuesto{nodo->Derecho->Id} [label=\"Der\", color=\"blue\"];");
+            GenerarDotRec(nodo->Derecho, sb);
+        }
     }
 
     public string PtrToString(char* ptr) {

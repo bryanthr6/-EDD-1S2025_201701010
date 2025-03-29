@@ -1,0 +1,13 @@
+digraph G {
+  node [shape=record, fontname=Arial];
+  rankdir=TB;
+
+  label = "Reporte de Repuestos (Árbol AVL)";
+  fontsize = 20;
+
+  repuesto2 [label="{ID: 2|Repuesto: Bujías|Detalles: Para encendido del motor|Costo: Q200}"];
+  repuesto2 -> repuesto1 [label="Izq", color="red"];
+  repuesto1 [label="{ID: 1|Repuesto: Filtro de aceite|Detalles: Filtra impurezas del aceite del motor|Costo: Q150}"];
+  repuesto2 -> repuesto3 [label="Der", color="blue"];
+  repuesto3 [label="{ID: 3|Repuesto: Pastillas de freno|Detalles: Para sistema de frenado|Costo: Q300}"];
+}

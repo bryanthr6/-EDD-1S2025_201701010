@@ -1,0 +1,11 @@
+digraph G {
+  node [shape=record, fontname=Arial];
+  rankdir=TB;
+
+  label = "Reporte de Servicios (Árbol Binario)";
+  fontsize = 20;
+
+  servicio1 [label="{ID: 1|RepuestoID: 1|VehículoID: 1|Detalles: sadasdsad|Costo: Q122}"];
+  servicio1 -> servicio2 [label="Der", color="blue"];
+  servicio2 [label="{ID: 2|RepuestoID: 1|VehículoID: 1|Detalles: dsdsa|Costo: Q22222}"];
+}

@@ -52,11 +52,12 @@ public class ArbolB5Facturas
         }
         InsertarNoLleno(raiz, factura);
     }
+
     public int GenerarNuevoIdFactura()
-        {
-            ultimoIdFactura++;
-            return ultimoIdFactura;
-        }
+    {
+        ultimoIdFactura++;
+        return ultimoIdFactura;
+    }
 
     public void MostrarFacturaPorId(int id)
     {

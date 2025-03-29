@@ -145,6 +145,34 @@ public unsafe class ArbolBinarioServicios : IDisposable
         return id < nodo->Id ? BuscarRec(nodo->Izquierdo, id) : BuscarRec(nodo->Derecho, id);
     }
 
+    public unsafe string GenerarDot()
+    {
+        var sb = new StringBuilder();
+        GenerarDotRec(raiz, sb);
+        return sb.ToString();
+    }
+
+    private unsafe void GenerarDotRec(NodoServicio* nodo, StringBuilder sb)
+    {
+        if (nodo == null) return;
+
+        string detalles = PtrToString(nodo->Detalles);
+        
+        sb.AppendLine($"  servicio{nodo->Id} [label=\"{{ID: {nodo->Id}|RepuestoID: {nodo->IdRepuesto}|VehículoID: {nodo->IdVehiculo}|Detalles: {detalles}|Costo: Q{nodo->Costo}}}\"];");
+        
+        if (nodo->Izquierdo != null)
+        {
+            sb.AppendLine($"  servicio{nodo->Id} -> servicio{nodo->Izquierdo->Id} [label=\"Izq\", color=\"red\"];");
+            GenerarDotRec(nodo->Izquierdo, sb);
+        }
+        
+        if (nodo->Derecho != null)
+        {
+            sb.AppendLine($"  servicio{nodo->Id} -> servicio{nodo->Derecho->Id} [label=\"Der\", color=\"blue\"];");
+            GenerarDotRec(nodo->Derecho, sb);
+        }
+    }
+
     public void MostrarInOrden() 
     {
         Console.WriteLine("\n=== SERVICIOS (IN ORDEN) ===");

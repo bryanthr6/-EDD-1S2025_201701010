@@ -1,0 +1,15 @@
+digraph G {
+  node [shape=record, fontname=Arial];
+  rankdir=LR;
+
+  label = "Reporte de Vehículos";
+  fontsize = 20;
+
+  vehiculo1 [label="{ID: 1|UsuarioID: 1|Marca: Toyota|Modelo: 2015|Placa: P123ABC}"];
+  vehiculo2 [label="{ID: 2|UsuarioID: 2|Marca: Honda|Modelo: 2018|Placa: P456XYZ}"];
+  vehiculo2 -> vehiculo1 [dir=both, color="green"];
+  vehiculo1 [label="{ID: 1|UsuarioID: 1|Marca: Honda Civic|Modelo: 2005|Placa: XZJ7H9K}"];
+  vehiculo1 -> vehiculo2 [dir=both, color="green"];
+  vehiculo2 [label="{ID: 2|UsuarioID: 2|Marca: Toyota Corolla|Modelo: 2010|Placa: JKS8T5A}"];
+  vehiculo2 -> vehiculo1 [dir=both, color="green"];
+}

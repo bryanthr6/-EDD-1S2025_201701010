@@ -40,6 +40,8 @@ unsafe class ListaVehiculos {
         cabeza = null;
     }
 
+    public NodoVehiculo* GetCabeza() => cabeza;
+
     public void AgregarVehiculo(int id, int idUsuario, string marca, int modelo, string placa) {
         NodoVehiculo* nuevo = (NodoVehiculo*)Marshal.AllocHGlobal(sizeof(NodoVehiculo));
         *nuevo = new NodoVehiculo(id, idUsuario, marca, modelo, placa);
@@ -126,5 +128,4 @@ unsafe class ListaVehiculos {
         }
         return resultado.ToString();
     }
-
 }
