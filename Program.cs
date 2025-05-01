@@ -35,34 +35,10 @@ unsafe class Program
             // Cargar usuario admin (requerido por el enunciado)
             listaUsuarios.AgregarUsuario(0, "Admin", "Sistema", "admin@usac.com", 30, "admin123");
 
-            // Datos de prueba opcionales
-            CargarDatosPrueba();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error al cargar datos iniciales: {ex.Message}");
-        }
-    }
-
-    private static void CargarDatosPrueba()
-    {
-        // Solo cargar datos de prueba si no hay datos existentes
-        if (listaUsuarios.GetCabeza() == null || listaUsuarios.GetCabeza()->Siguiente == null)
-        {
-            // Usuarios de prueba
-            listaUsuarios.AgregarUsuario(1, "Juan", "Pérez", "juan@usac.com", 25, "clave123");
-            listaUsuarios.AgregarUsuario(2, "María", "López", "maria@usac.com", 28, "clave456");
-            
-            // Vehículos de prueba
-            listaVehiculos.AgregarVehiculo(1, 1, "Toyota", 2015, "P123ABC");
-            listaVehiculos.AgregarVehiculo(2, 2, "Honda", 2018, "P456XYZ");
-            
-            // Repuestos de prueba
-            arbolRepuestos.Insertar(1, "Filtro de aceite", "Filtra impurezas del aceite del motor", 150);
-            arbolRepuestos.Insertar(2, "Bujías", "Para encendido del motor", 200);
-            arbolRepuestos.Insertar(3, "Pastillas de freno", "Para sistema de frenado", 300);
-            
-            Console.WriteLine("Datos de prueba cargados exitosamente");
         }
     }
 
