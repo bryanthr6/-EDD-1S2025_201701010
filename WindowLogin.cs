@@ -1,5 +1,7 @@
 using Gtk;
 using System;
+using System.Security.Cryptography;
+using System.Text;
 
 public class WindowLogin : Window
 {
@@ -39,7 +41,7 @@ public class WindowLogin : Window
         ShowAll();
     }
 
-    private unsafe void OnLoginClicked(object? sender, EventArgs e)
+    private void OnLoginClicked(object? sender, EventArgs e)
     {
         string email = emailEntry.Text;
         string password = passwordEntry.Text;
@@ -54,16 +56,22 @@ public class WindowLogin : Window
         }
 
         // Validar usuario normal
-        var usuario = Program.listaUsuarios.BuscarPorCorreo(email);
+        var usuario = Program.blockchainUsuarios.BuscarUsuarioPorCorreo(email);
         if (usuario != null)
         {
-            string contraseniaAlmacenada = Program.listaUsuarios.PtrToString(usuario->Contrasenia);
-            if (password == contraseniaAlmacenada)
+            // Encriptar contraseña ingresada para comparar
+            using (SHA256 sha256 = SHA256.Create())
             {
-                WindowUser userWindow = new WindowUser(usuario);
-                userWindow.Show();
-                this.Destroy();
-                return;
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                string hashedPassword = BitConverter.ToString(bytes).Replace("-", "").ToLower();
+                
+                if (hashedPassword == usuario.Contrasenia)
+                {
+                    WindowUser userWindow = new WindowUser(usuario);
+                    userWindow.Show();
+                    this.Destroy();
+                    return;
+                }
             }
         }
 

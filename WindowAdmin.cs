@@ -10,6 +10,7 @@ public class WindowAdmin : Window
     private Button verRepuestosButton;
     private Button generarServicioButton;
     private Button generarReportesButton;
+    private Button verBlockchainButton;
 
     public WindowAdmin() : base("Menú Administrador")
     {
@@ -34,6 +35,7 @@ public class WindowAdmin : Window
         verRepuestosButton = new Button("Visualizar Repuestos") { MarginBottom = 10 };
         generarServicioButton = new Button("Generar Servicio") { MarginBottom = 10 };
         generarReportesButton = new Button("Generar Reportes") { MarginBottom = 10 };
+        verBlockchainButton = new Button("Ver Blockchain") { MarginBottom = 10 };
         logoutButton = new Button("Cerrar sesión") { MarginTop = 20 };
 
         // Añadir elementos al contenedor
@@ -43,6 +45,7 @@ public class WindowAdmin : Window
         vbox.PackStart(verRepuestosButton, false, false, 0);
         vbox.PackStart(generarServicioButton, false, false, 0);
         vbox.PackStart(generarReportesButton, false, false, 0);
+        vbox.PackStart(verBlockchainButton, false, false, 0);
         vbox.PackStart(logoutButton, false, false, 0);
         
         // Añadir contenedor a la ventana
@@ -55,6 +58,7 @@ public class WindowAdmin : Window
         verRepuestosButton.Clicked += OnVerRepuestosClicked;
         generarServicioButton.Clicked += OnGenerarServicioClicked;
         generarReportesButton.Clicked += OnGenerarReportesClicked;
+        verBlockchainButton.Clicked += OnVerBlockchainClicked;
         logoutButton.Clicked += OnLogoutClicked;
         
         ShowAll();
@@ -99,6 +103,13 @@ public class WindowAdmin : Window
     {
         WindowReportes reportesWindow = new WindowReportes();
         reportesWindow.Show();
+        this.Hide();
+    }
+
+    private void OnVerBlockchainClicked(object? sender, EventArgs e)
+    {
+        WindowVerBlockchain blockchainWindow = new WindowVerBlockchain();
+        blockchainWindow.Show();
         this.Hide();
     }
 

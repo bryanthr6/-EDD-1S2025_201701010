@@ -63,25 +63,19 @@ public class WindowReportes : Window
             string dotContent = "digraph G {\n";
             dotContent += "  node [shape=record, fontname=Arial];\n";
             dotContent += "  rankdir=LR;\n\n";
-            dotContent += "  label = \"Reporte de Usuarios\";\n";
+            dotContent += "  label = \"Reporte de Usuarios (Blockchain)\";\n";
             dotContent += "  fontsize = 20;\n\n";
 
-            // Recorrer lista de usuarios
-            unsafe
+            // Recorrer blockchain de usuarios
+            foreach (var bloque in Program.blockchainUsuarios.Cadena)
             {
-                NodoUsuario* actual = Program.listaUsuarios.GetCabeza();
-                while (actual != null)
+                dotContent += $"  usuario{bloque.Data.ID} [label=\"{{ID: {bloque.Data.ID}|Nombre: {bloque.Data.Nombres} {bloque.Data.Apellidos}|Correo: {bloque.Data.Correo}|Edad: {bloque.Data.Edad}}}\"];\n";
+                
+                // Conectar con el bloque anterior (para mostrar la cadena)
+                if (bloque.Index > 0)
                 {
-                    string nombres = Program.listaUsuarios.PtrToString(actual->Nombres);
-                    string apellidos = Program.listaUsuarios.PtrToString(actual->Apellidos);
-                    string correo = Program.listaUsuarios.PtrToString(actual->Correo);
-                    
-                    dotContent += $"  usuario{actual->Id} [label=\"{{ID: {actual->Id}|Nombre: {nombres} {apellidos}|Correo: {correo}|Edad: {actual->Edad}}}\"];\n";
-                    
-                    if (actual->Siguiente != null)
-                        dotContent += $"  usuario{actual->Id} -> usuario{actual->Siguiente->Id} [color=\"blue\"];\n";
-                    
-                    actual = actual->Siguiente;
+                    dotContent += $"  usuario{bloque.Data.ID} -> usuario{Program.blockchainUsuarios.Cadena[bloque.Index-1].Data.ID} " +
+                                 $"[label=\"Prev\", color=\"blue\"];\n";
                 }
             }
 

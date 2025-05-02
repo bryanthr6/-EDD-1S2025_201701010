@@ -1,15 +1,15 @@
 using Gtk;
 using System;
-using System.Runtime.InteropServices;
 
-public unsafe class WindowUser : Window
+public class WindowUser : Window
 {
     private Button logoutButton;
     private Button misServiciosButton;
     private Button registrarVehiculoButton;
-    private NodoUsuario* usuario;
+    private UsuarioData usuario;
 
-    public unsafe WindowUser(NodoUsuario* usuario) : base("Panel de Usuario")
+    // Cambiar el constructor para recibir UsuarioData en lugar de NodoUsuario*
+    public WindowUser(UsuarioData usuario) : base("Panel de Usuario")
     {
         this.usuario = usuario;
         SetDefaultSize(500, 400);
@@ -19,13 +19,8 @@ public unsafe class WindowUser : Window
         // Contenedor principal
         var vbox = new Box(Orientation.Vertical, 10);
         
-        // Obtener datos del usuario
-        string nombres = Program.listaUsuarios.PtrToString(usuario->Nombres);
-        string apellidos = Program.listaUsuarios.PtrToString(usuario->Apellidos);
-        string correo = Program.listaUsuarios.PtrToString(usuario->Correo);
-
         // Encabezado
-        var welcomeLabel = new Label($"<big><b>Bienvenido, {nombres} {apellidos}</b></big>")
+        var welcomeLabel = new Label($"<big><b>Bienvenido, {usuario.Nombres} {usuario.Apellidos}</b></big>")
         {
             UseMarkup = true,
             Halign = Align.Center,
@@ -36,8 +31,8 @@ public unsafe class WindowUser : Window
         var userInfoFrame = new Frame("Información de tu cuenta");
         var userInfoBox = new Box(Orientation.Vertical, 5) { Margin = 10 };
         
-        var correoLabel = new Label($"<b>Correo:</b> {correo}") { UseMarkup = true, Halign = Align.Start };
-        var edadLabel = new Label($"<b>Edad:</b> {usuario->Edad}") { UseMarkup = true, Halign = Align.Start };
+        var correoLabel = new Label($"<b>Correo:</b> {usuario.Correo}") { UseMarkup = true, Halign = Align.Start };
+        var edadLabel = new Label($"<b>Edad:</b> {usuario.Edad}") { UseMarkup = true, Halign = Align.Start };
         
         userInfoBox.PackStart(correoLabel, false, false, 0);
         userInfoBox.PackStart(edadLabel, false, false, 0);
@@ -88,16 +83,16 @@ public unsafe class WindowUser : Window
         ShowAll();
     }
 
-    private unsafe void OnMisServiciosClicked(object? sender, EventArgs e)
+    private void OnMisServiciosClicked(object? sender, EventArgs e)
     {
-        var serviciosWindow = new WindowVerServicios(usuario->Id);
+        var serviciosWindow = new WindowVerServicios(usuario.ID);
         serviciosWindow.Show();
         this.Destroy();
     }
 
-    private unsafe void OnRegistrarVehiculoClicked(object? sender, EventArgs e)
+    private void OnRegistrarVehiculoClicked(object? sender, EventArgs e)
     {
-        var registroWindow = new WindowRegistroVehiculo(usuario->Id);
+        var registroWindow = new WindowRegistroVehiculo(usuario.ID);
         registroWindow.Show();
         this.Destroy();
     }

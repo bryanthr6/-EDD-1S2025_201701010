@@ -94,9 +94,20 @@ public class WindowCarga : Window
                         cantidad = datos.Usuarios.Count;
                         foreach (var usuario in datos.Usuarios) 
                         {
-                            Program.listaUsuarios.AgregarUsuario(
-                                usuario.ID, usuario.Nombres, usuario.Apellidos, 
-                                usuario.Correo, usuario.Edad, usuario.Contrasenia);
+                            // Saltar el usuario admin
+                            if (usuario.ID != 0)
+                            {
+                                var userData = new UsuarioData
+                                {
+                                    ID = usuario.ID,
+                                    Nombres = usuario.Nombres,
+                                    Apellidos = usuario.Apellidos,
+                                    Correo = usuario.Correo,
+                                    Edad = usuario.Edad,
+                                    Contrasenia = usuario.Contrasenia
+                                };
+                                Program.blockchainUsuarios.AgregarUsuario(userData);
+                            }
                         }
                         mensaje = $"Se cargaron {cantidad} usuarios correctamente";
                         break;

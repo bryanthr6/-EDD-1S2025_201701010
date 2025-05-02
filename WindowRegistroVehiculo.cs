@@ -133,7 +133,7 @@ public class WindowRegistroVehiculo : Window
     private unsafe void OnRegresarClicked(object? sender, EventArgs e)
     {
         // Buscar el usuario actual
-        var usuario = Program.listaUsuarios.BuscarPorId(idUsuario);
+        var usuario = Program.blockchainUsuarios.BuscarUsuarioPorId(idUsuario);
         if (usuario != null)
         {
             var userWindow = new WindowUser(usuario);

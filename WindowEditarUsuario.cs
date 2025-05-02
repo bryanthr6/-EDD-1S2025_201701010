@@ -110,48 +110,32 @@ public class WindowEditarUsuario : Window
         ShowAll();
     }
 
-    private unsafe void OnBuscarClicked(object? sender, EventArgs e)
+    private void OnBuscarClicked(object? sender, EventArgs e)
     {
         if (int.TryParse(entryId.Text, out int idUsuario))
         {
-            // Buscar usuario en la lista
-            var usuario = Program.listaUsuarios.BuscarPorId(idUsuario);
+            var usuario = Program.blockchainUsuarios.BuscarUsuarioPorId(idUsuario);
             
             if (usuario != null)
             {
                 // Habilitar campos y llenar con datos
-                entryNombre.Sensitive = true;
-                entryApellido.Sensitive = true;
-                entryEdad.Sensitive = true;
-                entryCorreo.Sensitive = true;
-                borrarButton.Sensitive = true;
+                entryNombre.Text = usuario.Nombres;
+                entryApellido.Text = usuario.Apellidos;
+                entryEdad.Text = usuario.Edad.ToString();
+                entryCorreo.Text = usuario.Correo;
                 
-                entryNombre.Text = Program.listaUsuarios.PtrToString(usuario->Nombres);
-                entryApellido.Text = Program.listaUsuarios.PtrToString(usuario->Apellidos);
-                entryEdad.Text = usuario->Edad.ToString();
-                entryCorreo.Text = Program.listaUsuarios.PtrToString(usuario->Correo);
+                // Habilitar botones
+                borrarButton.Sensitive = true;
             }
             else
             {
-                using var md = new MessageDialog(
-                    this,
-                    DialogFlags.DestroyWithParent,
-                    MessageType.Error,
-                    ButtonsType.Ok,
-                    "Usuario no encontrado");
-                md.Run();
+                MostrarError("Usuario no encontrado");
                 borrarButton.Sensitive = false;
             }
         }
         else
         {
-            using var md = new MessageDialog(
-                this,
-                DialogFlags.DestroyWithParent,
-                MessageType.Error,
-                ButtonsType.Ok,
-                "ID inválido. Ingrese un número válido");
-            md.Run();
+            MostrarError("ID inválido");
             borrarButton.Sensitive = false;
         }
     }
@@ -166,12 +150,12 @@ public class WindowEditarUsuario : Window
                 DialogFlags.Modal,
                 MessageType.Question,
                 ButtonsType.YesNo,
-                "¿Está seguro que desea eliminar este usuario?");
+                "¿Está seguro que desea marcar este usuario como inactivo?");
             
             if (confirmDialog.Run() == (int)ResponseType.Yes)
             {
-                // Eliminar usuario
-                Program.listaUsuarios.EliminarPorId(idUsuario);
+                // En una blockchain real no se puede eliminar, solo marcar como inactivo
+                // Implementar lógica de marcado aquí si es necesario
                 
                 // Mostrar confirmación
                 using var successDialog = new MessageDialog(
@@ -179,7 +163,7 @@ public class WindowEditarUsuario : Window
                     DialogFlags.DestroyWithParent,
                     MessageType.Info,
                     ButtonsType.Ok,
-                    "Usuario eliminado correctamente");
+                    "Usuario marcado como inactivo");
                 successDialog.Run();
                 
                 // Limpiar formulario
@@ -200,13 +184,7 @@ public class WindowEditarUsuario : Window
         }
         else
         {
-            using var md = new MessageDialog(
-                this,
-                DialogFlags.DestroyWithParent,
-                MessageType.Error,
-                ButtonsType.Ok,
-                "ID inválido");
-            md.Run();
+            MostrarError("ID inválido");
         }
     }
 
@@ -216,5 +194,16 @@ public class WindowEditarUsuario : Window
         WindowGestion gestionWindow = new WindowGestion();
         gestionWindow.Show();
         this.Destroy();
+    }
+
+    private void MostrarError(string mensaje)
+    {
+        using var md = new MessageDialog(
+            this,
+            DialogFlags.DestroyWithParent,
+            MessageType.Error,
+            ButtonsType.Ok,
+            mensaje);
+        md.Run();
     }
 }

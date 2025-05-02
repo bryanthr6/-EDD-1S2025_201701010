@@ -2,31 +2,31 @@ using System;
 using System.Collections.Generic;
 
 public class UsuarioJson {
-    public int ID { get; set; }
-    public string Nombres { get; set; }
-    public string Apellidos { get; set; }
-    public string Correo { get; set; }
-    public int Edad { get; set; }
-    public string Contrasenia { get; set; }
+    public int ID { get; set; } = 0;
+    public string Nombres { get; set; } = string.Empty;
+    public string Apellidos { get; set; } = string.Empty;
+    public string Correo { get; set; } = string.Empty;
+    public int Edad { get; set; } = 0;
+    public string Contrasenia { get; set; } = string.Empty;
 }
 
 public class VehiculoJson {
-    public int ID { get; set; }
-    public int ID_Usuario { get; set; }
-    public string Marca { get; set; }
-    public int Modelo { get; set; }
-    public string Placa { get; set; }
+    public int ID { get; set; } = 0;
+    public int ID_Usuario { get; set; } = 0;
+    public string Marca { get; set; } = string.Empty;
+    public int Modelo { get; set; } = 0;
+    public string Placa { get; set; } = string.Empty;
 }
 
 public class RepuestoJson {
     public int ID { get; set; }
-    public string Repuesto { get; set; }
-    public string Detalles { get; set; }
-    public double Costo { get; set; }
+    public string Repuesto { get; set; } = string.Empty;
+    public string Detalles { get; set; } = string.Empty;
+    public double Costo { get; set; } = 0.0;
 }
 
 public class DatosJson {
-    public List<UsuarioJson> Usuarios { get; set; }
-    public List<VehiculoJson> Vehiculos { get; set; }
-    public List<RepuestoJson> Repuestos { get; set; }
+    public List<UsuarioJson> Usuarios { get; set; } = new List<UsuarioJson>();
+    public List<VehiculoJson> Vehiculos { get; set; } = new List<VehiculoJson>();
+    public List<RepuestoJson> Repuestos { get; set; } = new List<RepuestoJson>();
 }

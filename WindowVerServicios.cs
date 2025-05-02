@@ -123,7 +123,7 @@ public unsafe class WindowVerServicios : Window  // Marcamos la clase como unsaf
 
     private unsafe void OnRegresarClicked(object? sender, EventArgs e)
     {
-        var usuario = Program.listaUsuarios.BuscarPorId(idUsuario);
+        var usuario = Program.blockchainUsuarios.BuscarUsuarioPorId(idUsuario);
         if (usuario != null)
         {
             WindowUser userWindow = new(usuario);  // Usando new simplificado

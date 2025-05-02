@@ -5,7 +5,7 @@ using Gtk;
 
 unsafe class Program
 {
-    public static ListaUsuarios listaUsuarios = new ListaUsuarios();
+    public static BlockchainUsuarios blockchainUsuarios = new BlockchainUsuarios();
     public static ListaVehiculos listaVehiculos = new ListaVehiculos();
     public static ArbolAVLRepuestos arbolRepuestos = new ArbolAVLRepuestos();
     public static ArbolBinarioServicios arbolServicios = new ArbolBinarioServicios(
@@ -32,9 +32,8 @@ unsafe class Program
     {
         try
         {
-            // Cargar usuario admin (requerido por el enunciado)
-            listaUsuarios.AgregarUsuario(0, "Admin", "Sistema", "admin@usac.com", 30, "admin123");
-
+            // El admin ya está creado en el bloque génesis del constructor de BlockchainUsuarios
+            // No necesitamos agregarlo manualmente
         }
         catch (Exception ex)
         {
@@ -184,10 +183,16 @@ unsafe class Program
                 // Validar que el usuario admin no sea modificado
                 if (usuario.ID != 0)
                 {
-                    listaUsuarios.AgregarUsuario(usuario.ID, usuario.Nombres ?? string.Empty, 
-                                               usuario.Apellidos ?? string.Empty, 
-                                               usuario.Correo ?? string.Empty, 
-                                               usuario.Edad, usuario.Contrasenia ?? string.Empty);
+                    var userData = new UsuarioData
+                    {
+                        ID = usuario.ID,
+                        Nombres = usuario.Nombres ?? string.Empty,
+                        Apellidos = usuario.Apellidos ?? string.Empty,
+                        Correo = usuario.Correo ?? string.Empty,
+                        Edad = usuario.Edad,
+                        Contrasenia = usuario.Contrasenia ?? string.Empty
+                    };
+                    Program.blockchainUsuarios.AgregarUsuario(userData);
                 }
             }
             Console.WriteLine($"Se han cargado {datos.Usuarios.Count} usuarios.");
@@ -286,20 +291,20 @@ unsafe class Program
         }
     }
 
-    static unsafe void BuscarUsuarioPorId() 
+    static void BuscarUsuarioPorId() 
     {
         try
         {
             Console.Write("Ingrese el ID del usuario a buscar: ");
             if (int.TryParse(Console.ReadLine(), out int id)) 
             {
-                NodoUsuario* usuario = listaUsuarios.BuscarPorId(id);
+                var usuario = Program.blockchainUsuarios.BuscarUsuarioPorId(id);
                 if (usuario != null) 
                 {
-                    Console.WriteLine($"ID: {usuario->Id}");
-                    Console.WriteLine($"Nombre: {listaUsuarios.PtrToString(usuario->Nombres)} {listaUsuarios.PtrToString(usuario->Apellidos)}");
-                    Console.WriteLine($"Correo: {listaUsuarios.PtrToString(usuario->Correo)}");
-                    Console.WriteLine($"Edad: {usuario->Edad}");
+                    Console.WriteLine($"ID: {usuario.ID}");
+                    Console.WriteLine($"Nombre: {usuario.Nombres} {usuario.Apellidos}");
+                    Console.WriteLine($"Correo: {usuario.Correo}");
+                    Console.WriteLine($"Edad: {usuario.Edad}");
                 }
                 else 
                 {
@@ -321,25 +326,23 @@ unsafe class Program
     {
         try
         {
-            Console.Write("Ingrese el ID del usuario a eliminar: ");
+            Console.WriteLine("En una blockchain no se pueden eliminar usuarios directamente.");
+            Console.WriteLine("Se debe implementar un sistema de marcado como inactivo.");
+            /*
+            Console.Write("Ingrese el ID del usuario a marcar como inactivo: ");
             if (int.TryParse(Console.ReadLine(), out int id)) 
             {
-                // Prevenir eliminación del admin
-                if (id == 0)
-                {
-                    Console.WriteLine("No se puede eliminar al usuario administrador.");
-                    return;
-                }
-                listaUsuarios.EliminarPorId(id);
+                // Implementar lógica para marcar como inactivo
             } 
             else 
             {
                 Console.WriteLine("ID inválido.");
             }
+            */
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error al eliminar usuario: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 
